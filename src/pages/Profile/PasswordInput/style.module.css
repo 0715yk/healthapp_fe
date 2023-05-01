@@ -1,0 +1,62 @@
+.updatePasswordWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+}
+.hideBtn {
+  height: 100%;
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  color: black;
+  background-color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 8px;
+}
+.passwordHeader {
+  color: white;
+  font-size: 20px;
+}
+
+.updatePassword {
+  display: flex;
+  align-items: center;
+  height: 25px;
+  margin-top: 5px;
+}
+
+.inputWrapper {
+  position: relative;
+  height: 100%;
+}
+
+.updatePasswordInput {
+  height: 100%;
+  border: none;
+  border-radius: 5px;
+}
+
+.updatePasswordBtn {
+  height: 100%;
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  color: black;
+  background-color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 8px;
+}

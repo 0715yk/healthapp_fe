@@ -1,0 +1,72 @@
+.loginPage {
+  min-height: 100vh;
+  min-width: 100vw;
+  top: 100vh;
+  position: fixed;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition-duration: 750ms;
+}
+
+.loginPage header {
+  color: white;
+  font-size: 13vw;
+  text-align: center;
+  text-shadow: 0 0 3px #fff, 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #0ba9ca,
+    0 0 70px #0ba9ca, 0 0 80px #0ba9ca;
+}
+
+.loginPage main {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.loginPage h2 {
+  color: white;
+  font-weight: 300;
+  font-size: 2.3vh;
+  margin-top: 5px;
+}
+
+.loginPage section {
+  width: 100%;
+}
+
+.loginPage section input {
+  width: 100%;
+  height: 4vh;
+  margin-top: 10px;
+  outline: none;
+  font-size: 2vh;
+}
+/* .loginPage section input: { */
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttons button {
+  margin-top: 15px;
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  padding: 12px 0;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+#signUpBtn {
+  background-color: black;
+  border: none;
+  outline: none;
+  color: grey;
+  margin-top: 10px;
+  padding: unset;
+}

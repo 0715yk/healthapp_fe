@@ -1,0 +1,40 @@
+.workoutName {
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+#updateBtn {
+  color: white;
+  margin-left: 12px;
+}
+
+.updatePart {
+  display: flex;
+  align-items: center;
+}
+
+.setUpdatePart {
+  display: flex;
+  align-items: center;
+}
+
+.workoutNameInput {
+  border: none;
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  outline: none;
+}
+
+#deleteBtn {
+  color: white;
+  margin-left: 5px;
+}
+
+.xBtn {
+  color: white;
+  margin-left: 10px;
+  display: flex;
+  position: relative;
+  bottom: 1px;
+}

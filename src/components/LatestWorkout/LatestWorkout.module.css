@@ -1,0 +1,30 @@
+.latestWorkout {
+}
+
+.title {
+  font-weight: bold !important;
+  color: yellow !important;
+}
+
+.date {
+  margin-top: 10px;
+  color: white;
+}
+.scorePart {
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+.workoutPart {
+  display: flex !important;
+  flex-direction: column;
+}
+
+#workoutList {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: black;
+  color: white;
+}

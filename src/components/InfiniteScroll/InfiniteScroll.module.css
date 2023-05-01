@@ -1,0 +1,6 @@
+.infiniteScroll {
+  background-color: hotpink;
+  min-width: 100vw;
+  min-height: 500px;
+  word-wrap: break-word;
+}

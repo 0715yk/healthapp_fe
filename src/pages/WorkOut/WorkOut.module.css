@@ -1,0 +1,78 @@
+#stickyNav {
+  position: sticky;
+  top: 0;
+  background-color: black;
+  padding: 20px 0;
+}
+
+.workoutPage {
+  background-color: black;
+  min-width: 100vw;
+  min-height: 100vh;
+  padding-bottom: calc(120px + 10vh);
+}
+
+.registerArea {
+  display: flex;
+  align-items: center;
+  width: 90vw;
+  height: 8vh;
+  margin-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.inputArea {
+  display: flex;
+  width: 70%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.directInput {
+  height: 3.7vh;
+  outline: none;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+.indirectInput {
+  height: 3.7vh;
+  font-size: 1rem;
+  outline: none;
+  border-radius: 5px;
+}
+
+.emptyArea {
+  width: 1%;
+  height: 100%;
+}
+
+.btnArea {
+  height: 100%;
+  width: 29%;
+  border: none;
+  color: black;
+  background-color: white;
+  font-weight: bold;
+  font-size: 2.5rem;
+  border-radius: 5px;
+}
+
+#cacelBtn {
+  width: 90vw;
+  height: 7vh;
+  margin-left: 15px;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  color: white;
+  background-color: red;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 5vw;
+}

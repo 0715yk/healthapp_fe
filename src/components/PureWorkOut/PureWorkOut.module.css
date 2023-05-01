@@ -1,0 +1,51 @@
+.title {
+  padding-left: 15px;
+  width: 90vw;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 6vw;
+}
+
+.title input {
+  background-color: black;
+  color: white;
+  font-size: 6vw;
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+.rows {
+  color: white;
+  width: 90vw;
+  padding-left: 15px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#addBtn {
+  margin-top: 15px;
+  width: 100%;
+  height: 6vh;
+  font-size: 9vw;
+  background-color: white;
+  border: 1px solid white;
+  color: black;
+  border-radius: 5px;
+}
+
+#fixBtn {
+  margin-left: 10px;
+  font-size: 4vw !important;
+  color: white !important;
+}
+
+#deleteBtn {
+  margin-left: 10px;
+  font-size: 4vw !important;
+  color: white !important;
+}

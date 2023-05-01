@@ -1,0 +1,15 @@
+.deleteBtn {
+  width: 90vw;
+  height: 7vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  color: white;
+  background-color: red;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 5vw;
+  margin-top: 6px;
+}

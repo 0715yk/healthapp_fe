@@ -1,0 +1,26 @@
+.setUpdatePart {
+  display: flex;
+  align-items: center;
+}
+
+.setInput {
+  width: 50px;
+  background-color: black;
+  color: #ffffff;
+  border: none;
+  outline: none;
+  text-align: center;
+}
+
+#fixBtn {
+  margin-left: 12px;
+}
+
+#deleteBtn {
+  margin-left: 5px;
+}
+
+#xBtn {
+  margin-left: 8px;
+  font-size: 15px;
+}
