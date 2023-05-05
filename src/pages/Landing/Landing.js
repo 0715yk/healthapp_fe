@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from "react";
 import styles from "./Landing.module.css";
 import Login from "../Login/Login";
 import { customAxios } from "src/utils/axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import cookies from "react-cookies";
 import { useSetRecoilState } from "recoil";
 import { userState } from "src/states";
 
 const Landing = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+
   const setUserNickname = useSetRecoilState(userState);
 
   const scrollRef = useRef(null);

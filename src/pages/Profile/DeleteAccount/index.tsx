@@ -5,33 +5,45 @@ import { customAxios } from "src/utils/axios";
 import styles from "./style.module.css";
 import cookies from "react-cookies";
 import { useSetRecoilState } from "recoil";
-import { userState } from "src/states";
+import { loadingState, userState } from "src/states";
 
 const DeleteAccount = () => {
-  // const userInform = useRecoilValue(userState);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
   const [cancelModalOn, setCancelModalOn] = useState(true);
   const [btnOption, setBtnOption] = useState(true);
   const navigate = useNavigate();
   const setUserState = useSetRecoilState(userState);
+  const setLoadingSpinner = useSetRecoilState(loadingState);
 
   const closeModal = async () => {
     // 탈퇴 api 호출
     try {
-      await customAxios.delete(`/users`);
-      setCancelModalOn(false);
-      setBtnOption(false);
-      setModalOn({
-        on: true,
-        message:
-          "그동안 이용해주셔서 감사합니다. 5초 후에 랜딩 페이지로 이동합니다.",
-      });
-      setTimeout(() => {
-        setUserState({ nickname: "" });
-        cookies.remove("access_token", { path: "/" });
-        navigate("/");
-      }, 5000);
+      setLoadingSpinner({ isLoading: true });
+      const response = await customAxios.delete(`/users`);
+      if (response.status === 200) {
+        setCancelModalOn(false);
+        setBtnOption(false);
+
+        setModalOn({
+          on: true,
+          message:
+            "그동안 이용해주셔서 감사합니다. 5초 후에 랜딩 페이지로 이동합니다.",
+        });
+        setLoadingSpinner({ isLoading: false });
+        setTimeout(() => {
+          setUserState({ nickname: "" });
+          cookies.remove("access_token", { path: "/" });
+          navigate("/");
+        }, 5000);
+      } else {
+        setLoadingSpinner({ isLoading: false });
+        setModalOn({
+          on: true,
+          message: "서버 에러 잠시후 다시 시도해주세요.",
+        });
+      }
     } catch {
+      setLoadingSpinner({ isLoading: false });
       setModalOn({
         on: true,
         message: "서버 에러 잠시후 다시 시도해주세요.",

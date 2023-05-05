@@ -1,5 +1,5 @@
 import { userState } from "src/states";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { customAxios } from "src/utils/axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useCallback } from "react";

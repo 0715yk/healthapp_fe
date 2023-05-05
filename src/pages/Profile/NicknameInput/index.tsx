@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { useRecoilState } from "recoil";
-import { userState } from "src/states";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { loadingState, userState } from "src/states";
 import Modal from "src/components/Modal/Modal";
 import { validateUserNickname, NICKNAME_VALIDATION_MESSAGE } from "src/utils";
 import { customAxios } from "src/utils/axios";
 import styles from "./style.module.css";
 
 const NicknameInput = () => {
+  const setLoadingSpinner = useSetRecoilState(loadingState);
   const [nicknameInput, setNicknameInput] = useState("");
   const [userInform, setUserInform] = useRecoilState(userState);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
@@ -55,8 +56,10 @@ const NicknameInput = () => {
   const onClickEvent = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       // 여기서 유효성 검사가 통과하면 api 호출 아니면 Modal 호출
+      setLoadingSpinner({ isLoading: true });
       const resultCode = validateUserNickname(nicknameInput);
       if (nicknameInput === userInform.nickname) {
+        setLoadingSpinner({ isLoading: false });
         setModalOn({
           on: true,
           message: "동일한 닉네임으로는 변경할 수 없습니다.",
@@ -72,7 +75,7 @@ const NicknameInput = () => {
           await customAxios.patch(`/users/nickname`, {
             nickname: nicknameInput,
           });
-
+          setLoadingSpinner({ isLoading: false });
           setModalOn({ on: true, message: "성공적으로 수정됐습니다." });
           setUserInform((prev) => {
             return {
@@ -82,14 +85,16 @@ const NicknameInput = () => {
           });
         } catch (err) {
           const response = err?.response?.data;
+          setLoadingSpinner({ isLoading: false });
           setModalOn({ on: true, message: response?.message });
         }
       } else {
+        setLoadingSpinner({ isLoading: false });
         setModalOn({ on: true, message: message });
         return;
       }
     },
-    [nicknameInput, setUserInform, userInform.nickname]
+    [setLoadingSpinner, nicknameInput, setUserInform, userInform.nickname]
   );
 
   const closeModal = () => {

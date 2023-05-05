@@ -1,8 +1,8 @@
 import styles from "./WorkoutData.module.css";
 import React, { useState, useCallback } from "react";
 import Modal from "../Modal/Modal";
-import { useRecoilState } from "recoil";
-import { recordWorkoutState } from "../../states";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { loadingState, recordWorkoutState } from "../../states";
 import WorkoutName from "../WorkoutName";
 import WorkoutSet from "../WorkoutSet";
 import _ from "lodash";
@@ -14,7 +14,7 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
     on: false,
     message: "정말 삭제하시겠습니까?",
   });
-
+  const setLoadingSpinner = useSetRecoilState(loadingState);
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const date = urlParams.get("date");
@@ -25,6 +25,7 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
     // api 요청 후에 성공하면 아래 로직 적용
     try {
       // apicall
+      setLoadingSpinner({ isLoading: true });
       const response = await customAxios.delete(`/workout/workoutNum`, {
         data: { workoutNum: workout.id, datesId: workout.datesId },
       });
@@ -34,15 +35,24 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
           if (_ === idx) return false;
           else return true;
         });
+        setLoadingSpinner({ isLoading: false });
         setRecordWorkout(copyWorkout);
       }
     } catch {
+      setLoadingSpinner({ isLoading: false });
       setModalOn({
         on: true,
         message: "서버 에러 입니다. 잠시후 다시 시도해주세요.",
       });
     }
-  }, [idx, recordWorkout, setRecordWorkout, workout.datesId, workout.id]);
+  }, [
+    setLoadingSpinner,
+    idx,
+    recordWorkout,
+    setRecordWorkout,
+    workout.datesId,
+    workout.id,
+  ]);
 
   // set 제거 함수
 
@@ -70,11 +80,11 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
         cancelModal={setModalOnFunc}
         cancelModalOn={true}
       />
-      <div style={{ color: "gold", fontSize: "27px" }}>
+      <div style={{ color: "white", fontSize: "27px" }}>
         {`Workout Num : ${idx}`}
         {fixMode && (
           <i
-            class="far fa-trash-alt"
+            className="far fa-trash-alt"
             id={styles.deleteBtn}
             onClick={setModalOnFunc}
           ></i>
@@ -94,11 +104,12 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
               datesId={workout?.datesId}
             />
             <div style={{ marginTop: "20px" }}>
-              {el?.workouts?.map((_) => {
+              {el?.workouts?.map((_, setIdx) => {
                 return (
                   <WorkoutSet
                     key={_.id}
                     el={_}
+                    setIdx={setIdx}
                     fixMode={fixMode}
                     idx={idx}
                     workoutNameIdx={workoutNameIdx}
@@ -115,4 +126,4 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
   );
 };
 
-export default React.memo(WorkoutData);
+export default WorkoutData;

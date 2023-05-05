@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import styles from "./PureWorkOut.module.css";
 import Row from "../Row/Row";
 import { useRecoilState } from "recoil";
@@ -12,6 +12,7 @@ const PureWorkOut = ({
   setCheckList,
   workoutList,
 }) => {
+  const [btnOption, setBtnOption] = useState(false);
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const [fixMode, setFixMode] = useState(false);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
@@ -78,34 +79,49 @@ const PureWorkOut = ({
   };
 
   const deleteWorkout = () => {
-    let copyArr = workouts.slice();
-    copyArr = copyArr.filter((el, _) => {
-      if (idx === _) return false;
-      else return true;
-    });
-    setWorkouts(copyArr);
+    setBtnOption(true);
+    setModalOn({ on: true, message: "정말 삭제하시겠습니까?" });
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") fixTitle();
   };
 
-  const closeModal = () => {
-    setModalOn((prev) => ({ on: !prev.on, message: prev.message }));
-  };
+  const closeModal = useCallback(() => {
+    if (btnOption) {
+      let copyArr = workouts.slice();
+      copyArr = copyArr.filter((el, _) => {
+        if (idx === _) return false;
+        else return true;
+      });
+      setWorkouts(copyArr);
+      setBtnOption(false);
+      setModalOn({ on: false, message: "" });
+    } else {
+      setModalOn((prev) => ({ on: !prev.on, message: prev.message }));
+    }
+  }, [setWorkouts, setModalOn, btnOption, workouts, idx]);
 
+  const cancelModal = () => {
+    setModalOn({ on: false, message: "" });
+  };
   return (
     <>
-      <Modal modalOn={modalOn} closeModal={closeModal} />
+      <Modal
+        modalOn={modalOn}
+        closeModal={closeModal}
+        cancelModalOn={btnOption}
+        cancelModal={cancelModal}
+      />
       <div className={styles.title}>
         {fixMode ? (
           <input ref={titleRef} onKeyDown={handleKeyDown} />
         ) : (
           workouts[idx] && workouts[idx][0]?.name
         )}
-        <i class="far fa-edit" id={styles.fixBtn} onClick={fixTitle}></i>
+        <i className="far fa-edit" id={styles.fixBtn} onClick={fixTitle}></i>
         <i
-          class="far fa-trash-alt"
+          className="far fa-trash-alt"
           id={styles.deleteBtn}
           onClick={deleteWorkout}
         ></i>

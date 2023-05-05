@@ -1,13 +1,15 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import styles from "./WorkOut.module.css";
 import TimeLapse from "../../components/TimeLapse";
 import WorkOutList from "../../components/WorkOutList/WorkOutList";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { workoutState } from "../../states";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { nowWorkingOrFinishState, workoutState } from "../../states";
 import Modal from "../../components/Modal/Modal";
 
 const WorkOut = ({ user }) => {
+  const setNowWorking = useSetRecoilState(nowWorkingOrFinishState);
+  const [btnOption, setBtnOption] = useState(false);
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
   const [workout, setWorkout] = useState("");
@@ -96,19 +98,38 @@ const WorkOut = ({ user }) => {
   };
 
   const cancelBtn = () => {
-    setWorkouts([]);
-    navigate("/main");
+    setBtnOption(true);
+    setModalOn({ on: true, message: "정말 포기하시겠습니까?" });
   };
 
-  const closeModal = () => {
-    setModalOn((prev) => ({ on: !prev.on, message: prev.message }));
+  const closeModal = useCallback(() => {
+    if (btnOption) {
+      setBtnOption(false);
+      setModalOn({ on: false, message: "" });
+      setWorkouts([]);
+      setNowWorking({
+        nowWorking: false,
+      });
+      navigate("/main");
+    } else {
+      setModalOn((prev) => ({ on: !prev.on, message: prev.message }));
+    }
+  }, [setNowWorking, btnOption, setModalOn, navigate, setWorkouts]);
+
+  const cancelModal = () => {
+    setModalOn({ on: false, message: "" });
   };
 
   return (
     <div className={styles.workoutPage}>
-      <Modal modalOn={modalOn} closeModal={closeModal} />
+      <Modal
+        cancelModal={cancelModal}
+        cancelModalOn={btnOption}
+        modalOn={modalOn}
+        closeModal={closeModal}
+      />
       <main>
-        <article id={styles.stickyNav}>
+        <article className={styles.stickyNav}>
           <TimeLapse />
           <article className={styles.registerArea}>
             <div className={styles.inputArea}>
@@ -138,7 +159,7 @@ const WorkOut = ({ user }) => {
               +
             </button>
           </article>
-          <button id={styles.cacelBtn} onClick={cancelBtn}>
+          <button id={styles.cancelBtn} onClick={cancelBtn}>
             Cancel Workout
           </button>
         </article>
@@ -149,8 +170,3 @@ const WorkOut = ({ user }) => {
 };
 
 export default WorkOut;
-
-// N+1이슈(one to many)
-// id =number로
-// Procedure => 자주 사용되는 명령어를 하나로 묶어서 처리하면 롤백하는 이슈는 어느정도 해결할 수 있을듯
-// 프론트단에서 버튼 api 호출 연속으로 못하도록 막기

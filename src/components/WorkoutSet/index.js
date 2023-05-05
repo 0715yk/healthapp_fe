@@ -3,10 +3,9 @@ import React, { useEffect, useState, useCallback } from "react";
 import _ from "lodash";
 import Modal from "../Modal/Modal";
 import { customAxios } from "src/utils/axios";
-import { useRecoilState } from "recoil";
-import { recordWorkoutState } from "src/states";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { loadingState, recordWorkoutState } from "src/states";
 
-// TODO = 옛날 자료 구조에 맞게 변경해서 업데이트 해야한다.
 const WorkoutSet = ({
   el,
   fixMode,
@@ -14,7 +13,9 @@ const WorkoutSet = ({
   workoutNumId,
   workoutNameIdx,
   idx,
+  setIdx,
 }) => {
+  const setLoadingSpinner = useSetRecoilState(loadingState);
   const [recordWorkout, setRecordWorkout] = useRecoilState(recordWorkoutState);
   const [setUpdateOn, setSetUpdateOn] = useState(false);
   const [modalOn, setModalOn] = useState({
@@ -59,6 +60,7 @@ const WorkoutSet = ({
     const primaryKey = el.id;
     try {
       // apicall
+      setLoadingSpinner({ isLoading: true });
       const response = await customAxios.patch(
         `/workout/workoutSet/${primaryKey}`,
         {
@@ -73,22 +75,33 @@ const WorkoutSet = ({
         ].workouts.find((workout) => workout.set === el.set);
         workoutsObj.kg = inputValue.kg;
         workoutsObj.reps = inputValue.reps;
+        setLoadingSpinner({ isLoading: false });
         setRecordWorkout(copyWorkout);
         setSetUpdateOn((prev) => !prev);
       }
     } catch (err) {
       console.log(err);
+      setLoadingSpinner({ isLoading: false });
       setModalOn({
         on: true,
         message: "서버 에러 입니다. 잠시후 다시 시도해주세요.",
       });
     }
-  }, [inputValue, el, idx, recordWorkout, setRecordWorkout, workoutNameIdx]);
+  }, [
+    setLoadingSpinner,
+    inputValue,
+    el,
+    idx,
+    recordWorkout,
+    setRecordWorkout,
+    workoutNameIdx,
+  ]);
 
   const deleteSet = async () => {
     const id = el.id;
     const workoutNameId = el.workoutNameId;
     try {
+      setLoadingSpinner({ isLoading: true });
       const response = await customAxios.delete("workout/workout", {
         data: {
           id,
@@ -118,12 +131,13 @@ const WorkoutSet = ({
             copyWorkout = copyWorkout.filter((_, index) => idx !== index);
           }
         }
-
+        setLoadingSpinner({ isLoading: false });
         setRecordWorkout(copyWorkout);
         setSetUpdateOn(false);
       }
     } catch (err) {
       console.log(err);
+      setLoadingSpinner({ isLoading: false });
       setModalOn({
         on: true,
         message: "서버 에러 입니다. 잠시후 다시 시도해주세요.",
@@ -170,12 +184,13 @@ const WorkoutSet = ({
         modalOn={modalOn}
         closeModal={closeModal}
         cancelModal={setModalOnFunc}
+        cancelModalOn={true}
       />
       {fixMode ? (
         <>
           {setUpdateOn ? (
             <div className={styles.setUpdatePart}>
-              <div>{`set ${el?.set} : `}&nbsp;</div>
+              <div>{`set ${setIdx} : `}&nbsp;</div>
               <input
                 className={styles.setInput}
                 value={inputValue?.kg}
@@ -196,9 +211,13 @@ const WorkoutSet = ({
               />
               &nbsp;
               <div>reps</div>
-              <i class="far fa-edit" id={styles.fixBtn} onClick={updateSet}></i>
               <i
-                class="far fa-trash-alt"
+                className="far fa-edit"
+                id={styles.fixBtn}
+                onClick={updateSet}
+              ></i>
+              <i
+                className="far fa-trash-alt"
                 id={styles.deleteBtn}
                 onClick={setModalOnFunc}
               ></i>
@@ -208,9 +227,9 @@ const WorkoutSet = ({
             </div>
           ) : (
             <>
-              {`set ${el?.set} : ${el?.kg || 0} kg x ${el?.reps || 0} reps`}
+              {`set ${setIdx} : ${el?.kg || 0} kg x ${el?.reps || 0} reps`}
               <i
-                class="far fa-edit"
+                className="far fa-edit"
                 id={styles.fixBtn}
                 onClick={() => {
                   setSetUpdateOn((prev) => !prev);
@@ -220,7 +239,7 @@ const WorkoutSet = ({
           )}
         </>
       ) : (
-        `set ${el?.set} : ${el.kg === null ? 0 : el.kg} kg x ${
+        `set ${setIdx} : ${el.kg === null ? 0 : el.kg} kg x ${
           el.reps === null ? 0 : el.reps
         } reps`
       )}
@@ -228,4 +247,4 @@ const WorkoutSet = ({
   );
 };
 
-export default React.memo(WorkoutSet);
+export default WorkoutSet;

@@ -1,5 +1,23 @@
 import { atom, selector } from "recoil";
 import _ from "lodash";
+import { recoilPersist } from "recoil-persist";
+
+const { persistAtom } = recoilPersist();
+
+export const nowWorkingOrFinishState = atom({
+  key: "nowWorkingOrFinish",
+  default: {
+    nowWorking: false,
+  },
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const loadingState = atom({
+  key: "loadingState",
+  default: {
+    isLoading: false,
+  },
+});
 
 export const userState = atom({
   key: "userState",
@@ -8,9 +26,11 @@ export const userState = atom({
   },
 });
 
+// 1
 export const workoutState = atom({
   key: "workoutState",
   default: [],
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const allWorkoutState = atom({
@@ -18,9 +38,11 @@ export const allWorkoutState = atom({
   default: [],
 });
 
+// 2
 export const timeState = atom({
   key: "timeState",
   default: { startTime: "", endTime: "" },
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const dateWorkoutState = atom({
@@ -33,8 +55,10 @@ export const recordWorkoutState = atom({
   default: [],
 });
 
+// 3
 export const durationState = selector({
   key: "durationState",
+  effects_UNSTABLE: [persistAtom],
   get: ({ get }) => {
     const time = get(timeState);
     const strtTime = time.startTime.format("HH:mm:ss").split(":");
@@ -75,8 +99,10 @@ export const durationState = selector({
   },
 });
 
+//4
 export const bestSetState = selector({
   key: "bestSetState",
+  effects_UNSTABLE: [persistAtom],
   get: ({ get }) => {
     const workouts = get(workoutState);
     const copyWorkouts = _.cloneDeep(workouts);
@@ -102,38 +128,10 @@ export const bestSetState = selector({
   },
 });
 
-// export const apiState = selector({
-//   key: "apiState",
-//   get: ({ get }) => {
-//     const workouts = get(workoutState);
-//     const copyWorkouts = _.cloneDeep(workouts);
-//     const bestSets = copyWorkouts.map((workout) => {
-//       const copyArr = workout.slice();
-//       workout.sort((x, y) => {
-//         const prevScore =
-//           (parseInt(x.reps) === 0 ? 1 : parseInt(x.reps)) *
-//           (parseInt(x.kg) === 0 ? 1 : parseInt(x.kg));
-
-//         const nextScore =
-//           (parseInt(y.reps) === 0 ? 1 : parseInt(y.reps)) *
-//           (parseInt(y.kg) === 0 ? 1 : parseInt(y.kg));
-
-//         if (nextScore === prevScore) {
-//           return parseInt(y.kg) - parseInt(x.kg);
-//         } else return nextScore - prevScore;
-//       });
-
-//       const setNum = workout[0].set - 1;
-//       copyArr[setNum].bestSet = true;
-//       return copyArr;
-//     });
-
-//     return bestSets;
-//   },
-// });
-
+// 5
 export const workoutCntState = selector({
   key: "workoutCntState",
+  effects_UNSTABLE: [persistAtom],
   get: ({ get }) => {
     const workouts = get(workoutState);
     return workouts.length;

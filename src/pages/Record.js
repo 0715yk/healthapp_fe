@@ -20,6 +20,10 @@ const Record = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    return () => {
+      setWorkouts([]);
+    };
   }, []);
 
   const completeWorkout = async () => {
@@ -47,9 +51,11 @@ const Record = () => {
                 Best set 🏅
               </h3>
               <ul list-style="none">
-                {bestSets.map((el) => {
+                {bestSets.map((el, keyIdex) => {
                   return (
-                    <li>{`${el.name} : ${el.kg} kg x ${el.reps} reps`}</li>
+                    <li
+                      key={keyIdex}
+                    >{`${el.name} : ${el.kg} kg x ${el.reps} reps`}</li>
                   );
                 })}
               </ul>
@@ -60,9 +66,9 @@ const Record = () => {
           <h3 id={styles.workoutsPart} style={{ color: "gold" }}>
             Workouts ⭐
           </h3>
-          {workouts.map((workout) => {
+          {workouts.map((workout, keyIdx) => {
             return (
-              <section>
+              <section key={keyIdx}>
                 <h3>{workout[0].name}</h3>
                 <section id={styles.workoutList}>
                   {workout.map((el, key) => {

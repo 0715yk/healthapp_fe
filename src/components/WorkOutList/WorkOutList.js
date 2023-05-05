@@ -1,29 +1,37 @@
-import React, { useState } from "react";
+import { useState, useCallback } from "react";
 import styles from "./WorkOutList.module.css";
 import { useNavigate } from "react-router-dom";
 import PureWorkOut from "../PureWorkOut/PureWorkOut";
 import moment from "moment";
 import Modal from "../Modal/Modal";
-import { useRecoilState } from "recoil";
-import { workoutState, timeState } from "../../states";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  workoutState,
+  timeState,
+  loadingState,
+  nowWorkingOrFinishState,
+} from "../../states";
 import { customAxios } from "src/utils/axios";
 import _ from "lodash";
 
-const WorkOutList = ({ user }) => {
+const WorkOutList = () => {
+  const setLoadingSpinner = useSetRecoilState(loadingState);
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const [time, setTime] = useRecoilState(timeState);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
-
+  const [btnOption, setBtnOption] = useState(false);
   const navigate = useNavigate();
-
-  const finishWorkout = async () => {
+  const setNowWorking = useSetRecoilState(nowWorkingOrFinishState);
+  const finishWorkout = useCallback(async () => {
     if (workouts.length === 0) {
+      setBtnOption(false);
       setModalOn({
         on: true,
         message: "하나 이상의 루틴을 실행해 주세요",
       });
       return;
     }
+    setLoadingSpinner({ isLoading: true });
     setTime({ ...time, endTime: moment() });
 
     let copyArr = _.cloneDeep(workouts);
@@ -41,10 +49,12 @@ const WorkOutList = ({ user }) => {
     copyArr = copyArr.filter((el) => el.length !== 0);
 
     if (copyArr.length === 0) {
+      setBtnOption(false);
       setModalOn({
         on: true,
         message: "하나 이상의 루틴을 실행해 주세요",
       });
+      setLoadingSpinner({ isLoading: false });
       return;
     }
 
@@ -76,26 +86,56 @@ const WorkOutList = ({ user }) => {
         date: date,
         workouts: bestSets,
       });
+      setLoadingSpinner({ isLoading: false });
+      setModalOn({ on: false, message: "" });
       setWorkouts(copyArr);
+      setNowWorking({
+        nowWorking: false,
+      });
       navigate("/main/record");
     } catch {
+      setLoadingSpinner({ isLoading: false });
       setModalOn({
         on: true,
         message: "서버 에러 입니다. 잠시후 다시 시도해주세요.",
       });
     }
+  }, [
+    navigate,
+    setLoadingSpinner,
+    time,
+    setWorkouts,
+    workouts,
+    setTime,
+    setNowWorking,
+  ]);
+
+  const checkFinishWorkout = () => {
+    setBtnOption(true);
+    setModalOn({ on: true, message: "정말 끝내시겠습니까?" });
   };
 
-  const closeModal = () => {
-    setModalOn({
-      on: false,
-      message: "",
-    });
+  const closeModal = useCallback(() => {
+    if (btnOption) {
+      void finishWorkout();
+    } else {
+      setModalOn({ on: false, message: "" });
+    }
+  }, [btnOption, finishWorkout, setModalOn]);
+
+  const cancelModal = () => {
+    setBtnOption(false);
+    setModalOn({ on: false, message: "" });
   };
 
   return (
     <div className={styles.writeFunc}>
-      <Modal modalOn={modalOn} closeModal={closeModal} />
+      <Modal
+        modalOn={modalOn}
+        closeModal={closeModal}
+        cancelModalOn={btnOption}
+        cancelModal={cancelModal}
+      />
       <main>
         <section>
           {workouts.map((workout, idx) => {
@@ -103,7 +143,10 @@ const WorkOutList = ({ user }) => {
           })}
         </section>
         <section className={styles.doneBtnPart}>
-          <button className={styles.glowBtn} onClick={finishWorkout}></button>
+          <button
+            className={styles.glowBtn}
+            onClick={checkFinishWorkout}
+          ></button>
         </section>
       </main>
     </div>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import styles from "./Row.module.css";
 import { useRecoilState } from "recoil";
 import { workoutState } from "../../states";
@@ -6,7 +6,8 @@ import Modal from "../Modal/Modal";
 
 const Row = ({ idx, el, workoutList }) => {
   const [workouts, setWorkouts] = useRecoilState(workoutState);
-  const [modalOn, setModalOn] = useState(false);
+  const [modalOn, setModalOn] = useState({ on: false, message: "" });
+  const [btnOption, setBtnOption] = useState(false);
   const kgRef = useRef();
   const repsRef = useRef();
 
@@ -37,7 +38,8 @@ const Row = ({ idx, el, workoutList }) => {
         repsRef.current.value.replace(/ /g, "") === "" ||
         parseInt(repsRef.current.value) <= 0
       ) {
-        setModalOn((prev) => !prev);
+        setModalOn({ on: true, message: "최소 한 번의 reps를 채워주세요" });
+
         return;
       }
 
@@ -57,46 +59,64 @@ const Row = ({ idx, el, workoutList }) => {
     }
   };
 
-  const deleteRow = (name, set) => {
-    const copyArr = [...workouts];
-    var setCnt = 1;
-    let copyWorkoutList = [...workoutList];
-    if (set === 1 && copyWorkoutList.length === 1) {
-      copyWorkoutList[0] = {
-        name,
-        set: 1,
-        kg: null,
-        reps: null,
-        done: false,
-      };
-    } else {
-      copyWorkoutList = copyWorkoutList
-        .filter((el) => {
-          if (el.set === set) {
-            return false;
-          } else return true;
-        })
-        .map((el) => {
-          const copyEl = Object.assign({}, el);
-          copyEl.set = setCnt;
-          setCnt++;
-          return copyEl;
-        });
+  const deleteRow = useCallback(
+    (name, set) => {
+      const copyArr = [...workouts];
+      var setCnt = 1;
+      let copyWorkoutList = [...workoutList];
+      if (set === 1 && copyWorkoutList.length === 1) {
+        copyWorkoutList[0] = {
+          name,
+          set: 1,
+          kg: null,
+          reps: null,
+          done: false,
+        };
+      } else {
+        copyWorkoutList = copyWorkoutList
+          .filter((el) => {
+            if (el.set === set) {
+              return false;
+            } else return true;
+          })
+          .map((el) => {
+            const copyEl = Object.assign({}, el);
+            copyEl.set = setCnt;
+            setCnt++;
+            return copyEl;
+          });
+      }
+      copyArr[idx] = copyWorkoutList;
+
+      setWorkouts(copyArr);
+    },
+    [setWorkouts, idx, workoutList, workouts]
+  );
+
+  const closeModal = useCallback(() => {
+    if (btnOption) {
+      deleteRow(el.name, el.set);
+      setBtnOption(false);
     }
-    copyArr[idx] = copyWorkoutList;
+    setModalOn({ on: false, message: "" });
+  }, [setModalOn, btnOption, deleteRow, el.name, el.set]);
 
-    setWorkouts(copyArr);
-  };
+  const deleteRowFunc = useCallback(() => {
+    setBtnOption(true);
+    setModalOn({ on: true, message: "정말 삭제하시겠습니까?" });
+  }, [setModalOn, setBtnOption]);
 
-  const closeModal = () => {
-    setModalOn((prev) => !prev);
+  const cancelModal = () => {
+    setModalOn({ on: false, message: "" });
   };
 
   return (
     <div className={styles.rowInput}>
       <Modal
-        modalOn={{ on: modalOn, message: "최소 한 번의 reps를 채워주세요" }}
+        cancelModalOn={btnOption}
+        modalOn={modalOn}
         closeModal={closeModal}
+        cancelModal={cancelModal}
       />
       <div>{`set ${el.set}`}</div>
       <div id={styles.kgInput}>
@@ -106,6 +126,7 @@ const Row = ({ idx, el, workoutList }) => {
         reps : {el.done ? el.reps : <input ref={repsRef} type="number" />}
       </div>
       <button
+        className={styles.clearRowBtn}
         onClick={() => {
           clearRow(el.set);
         }}
@@ -113,12 +134,7 @@ const Row = ({ idx, el, workoutList }) => {
         {el.done ? "fix" : "clear"}
       </button>
       {el.done ? (
-        <span
-          id={styles.xBtn}
-          onClick={() => {
-            deleteRow(el.name, el.set);
-          }}
-        >
+        <span id={styles.xBtn} onClick={deleteRowFunc}>
           X
         </span>
       ) : null}

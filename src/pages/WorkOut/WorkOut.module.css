@@ -1,11 +1,12 @@
-#stickyNav {
-  position: sticky;
+.stickyNav {
+  position: fixed;
   top: 0;
   background-color: black;
   padding: 20px 0;
 }
 
 .workoutPage {
+  overflow-y: scroll;
   background-color: black;
   min-width: 100vw;
   min-height: 100vh;
@@ -60,7 +61,7 @@
   border-radius: 5px;
 }
 
-#cacelBtn {
+#cancelBtn {
   width: 90vw;
   height: 7vh;
   margin-left: 15px;

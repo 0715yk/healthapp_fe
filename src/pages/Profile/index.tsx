@@ -7,21 +7,38 @@ import styles from "./style.module.css";
 import { useSetRecoilState } from "recoil";
 import { userState } from "src/states";
 import useCheckToken from "src/hooks/useCheckToken";
+import Modal from "src/components/Modal/Modal";
+import { useState } from "react";
 
 const Profile = () => {
   const navigate = useNavigate();
   const setUserState = useSetRecoilState(userState);
-
+  const [modalOn, setModalOn] = useState({ on: false, message: "" });
   const onLogout = () => {
+    setModalOn({ on: true, message: "정말 로그아웃 하시겠습니까?" });
+  };
+
+  useCheckToken();
+
+  const cancelModal = () => {
+    setModalOn({ on: false, message: "" });
+  };
+
+  const closeModal = () => {
+    setModalOn({ on: false, message: "" });
     setUserState({ nickname: "" });
     cookies.remove("access_token", { path: "/" });
     navigate("/");
   };
 
-  useCheckToken();
-
   return (
     <div className={styles.profilePage}>
+      <Modal
+        cancelModalOn={true}
+        modalOn={modalOn}
+        closeModal={closeModal}
+        cancelModal={cancelModal}
+      />
       <GlowHeader
         title={"Profile"}
         style={{

@@ -3,7 +3,13 @@ import styles from "./Main.module.css";
 import GlowHeader from "../../components/GlowHeader/GlowHeader";
 import moment from "moment";
 import LatestWorkout from "../../components/LatestWorkout";
-import { timeState, dateWorkoutState, recordWorkoutState } from "../../states";
+import {
+  timeState,
+  dateWorkoutState,
+  recordWorkoutState,
+  loadingState,
+  nowWorkingOrFinishState,
+} from "../../states";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -18,21 +24,31 @@ import { customAxios } from "src/utils/axios";
 import Modal from "src/components/Modal/Modal";
 
 const Main = ({ user }) => {
+  const setLoadingSpinner = useSetRecoilState(loadingState);
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
   const dateWorkout = useRecoilValue(dateWorkoutState);
   const setRecordWorkout = useSetRecoilState(recordWorkoutState);
+  const [nowWorking, setNowWorking] = useRecoilState(nowWorkingOrFinishState);
   const [time, setTime] = useRecoilState(timeState);
+
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
   const startWorkOut = () => {
     setTime({ ...time, startTime: moment() });
+    setNowWorking({
+      nowWorking: true,
+    });
     navigate("/main/workout");
   };
 
   useCheckToken();
 
   useEffect(() => {
-    setSelectedDate(null);
+    if (nowWorking.nowWorking) {
+      navigate("/main/workout");
+    } else {
+      setSelectedDate(null);
+    }
   }, []);
 
   const getWorkoutData = async (selectedDate) => {
@@ -42,10 +58,13 @@ const Main = ({ user }) => {
 
     // 조회한 뒤에는 날짜와 id 값을 통해 데이터를 조회(운동 기록)
     try {
+      setLoadingSpinner({ isLoading: true });
       const response = await customAxios.get(`/workout/${date}`);
+      setLoadingSpinner({ isLoading: false });
       setRecordWorkout(response?.data);
       navigate(`/main/records?date=${date}`);
     } catch {
+      setLoadingSpinner({ isLoading: false });
       setModalOn({
         on: true,
         message: "서버 에러 입니다. 잠시후 다시 시도해주세요.",

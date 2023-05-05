@@ -3,10 +3,11 @@ import React, { useEffect, useState, useCallback } from "react";
 import _ from "lodash";
 import Modal from "../Modal/Modal";
 import { customAxios } from "src/utils/axios";
-import { recordWorkoutState } from "src/states";
-import { useRecoilState } from "recoil";
+import { loadingState, recordWorkoutState } from "src/states";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
+  const setLoadingSpinner = useSetRecoilState(loadingState);
   const [recordWorkout, setRecordWorkout] = useRecoilState(recordWorkoutState);
   const [workoutUpdateOn, setWorkoutUpdateOn] = useState(false);
   useEffect(() => {
@@ -36,6 +37,7 @@ const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
     const workoutNumId = el.workoutNumId;
 
     try {
+      setLoadingSpinner({ isLoading: true });
       const response = await customAxios.delete("workout/workoutName", {
         data: {
           id,
@@ -53,11 +55,12 @@ const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
         if (copyWorkout[idx].workoutNames.length === 0) {
           copyWorkout = copyWorkout.filter((_, index) => idx !== index);
         }
-
+        setLoadingSpinner({ isLoading: false });
         setRecordWorkout(copyWorkout);
       }
     } catch (err) {
       console.log(err);
+      setLoadingSpinner({ isLoading: false });
       setModalOn({
         on: true,
         message: "서버 에러 입니다. 잠시후 다시 시도해주세요.",
@@ -80,7 +83,7 @@ const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
     }
 
     try {
-      // apicall
+      setLoadingSpinner({ isLoading: true });
       const response = await customAxios.patch(
         `/workout/workoutName/${primaryKey}`,
         {
@@ -91,16 +94,27 @@ const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
         const copyWorkout = _.cloneDeep(recordWorkout);
         const workoutNameObj = copyWorkout[idx].workoutNames[workoutNameIdx];
         workoutNameObj.workoutName = inputValue;
-
+        setLoadingSpinner({ isLoading: false });
         setRecordWorkout(copyWorkout);
         setWorkoutUpdateOn(false);
       }
-
-      // }
     } catch (err) {
       console.log(err);
+      setLoadingSpinner({ isLoading: false });
+      setModalOn({
+        on: true,
+        message: "서버 에러 입니다. 잠시후 다시 시도해주세요.",
+      });
     }
-  }, [inputValue, el, setRecordWorkout, workoutNameIdx, idx, recordWorkout]);
+  }, [
+    setLoadingSpinner,
+    inputValue,
+    el,
+    setRecordWorkout,
+    workoutNameIdx,
+    idx,
+    recordWorkout,
+  ]);
 
   const closeModal = () => {
     deleteWorkoutName();
@@ -162,7 +176,7 @@ const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
     <>
       {el?.workoutName}
       <i
-        class="far fa-edit"
+        className="far fa-edit"
         id={styles.updateBtn}
         onClick={() => {
           setWorkoutUpdateOn((prev) => !prev);
@@ -174,4 +188,4 @@ const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
   return <div className={styles.workoutName}>{workoutNameComponent}</div>;
 };
 
-export default React.memo(WorkoutName);
+export default WorkoutName;

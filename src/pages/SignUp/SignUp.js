@@ -7,9 +7,10 @@ import { validateSignupForm } from "src/utils";
 import { customAxios } from "src/utils/axios";
 import cookies from "react-cookies";
 import { useSetRecoilState } from "recoil";
-import { userState } from "src/states";
+import { loadingState, userState } from "src/states";
 
 const SignUp = React.forwardRef(({}, ref) => {
+  const setLoadingSpinner = useSetRecoilState(loadingState);
   const navigate = useNavigate();
   const idRef = useRef();
   const pwdRef = useRef();
@@ -30,6 +31,7 @@ const SignUp = React.forwardRef(({}, ref) => {
     const password = pwdRef.current.value;
     const nickname = nicknameRef.current.value;
     const message = validateSignupForm(id, password, nickname);
+    setLoadingSpinner({ isLoading: true });
     if (message === "") {
       try {
         const response = await customAxios.post("/users", {
@@ -43,6 +45,7 @@ const SignUp = React.forwardRef(({}, ref) => {
           // secure : true,
           // httpOnly: true,
         });
+        setLoadingSpinner({ isLoading: false });
         setUserState({
           nickname,
         });
@@ -51,12 +54,14 @@ const SignUp = React.forwardRef(({}, ref) => {
         const message =
           err?.response?.data?.message ??
           "서버 에러 입니다. 잠시후 다시 시도해주세요.";
+        setLoadingSpinner({ isLoading: false });
         setModalOn({
           on: true,
           message: message,
         });
       }
     } else {
+      setLoadingSpinner({ isLoading: false });
       setModalOn({
         on: true,
         message: message,
