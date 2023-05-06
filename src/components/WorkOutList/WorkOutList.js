@@ -5,12 +5,7 @@ import PureWorkOut from "../PureWorkOut/PureWorkOut";
 import moment from "moment";
 import Modal from "../Modal/Modal";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import {
-  workoutState,
-  timeState,
-  loadingState,
-  nowWorkingOrFinishState,
-} from "../../states";
+import { workoutState, timeState, loadingState } from "../../states";
 import { customAxios } from "src/utils/axios";
 import _ from "lodash";
 
@@ -21,7 +16,6 @@ const WorkOutList = () => {
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
   const [btnOption, setBtnOption] = useState(false);
   const navigate = useNavigate();
-  const setNowWorking = useSetRecoilState(nowWorkingOrFinishState);
   const finishWorkout = useCallback(async () => {
     if (workouts.length === 0) {
       setBtnOption(false);
@@ -89,9 +83,6 @@ const WorkOutList = () => {
       setLoadingSpinner({ isLoading: false });
       setModalOn({ on: false, message: "" });
       setWorkouts(copyArr);
-      setNowWorking({
-        nowWorking: false,
-      });
       navigate("/main/record");
     } catch {
       setLoadingSpinner({ isLoading: false });
@@ -100,15 +91,7 @@ const WorkOutList = () => {
         message: "서버 에러 입니다. 잠시후 다시 시도해주세요.",
       });
     }
-  }, [
-    navigate,
-    setLoadingSpinner,
-    time,
-    setWorkouts,
-    workouts,
-    setTime,
-    setNowWorking,
-  ]);
+  }, [navigate, setLoadingSpinner, time, setWorkouts, workouts, setTime]);
 
   const checkFinishWorkout = () => {
     setBtnOption(true);

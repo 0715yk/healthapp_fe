@@ -127,9 +127,10 @@ const PureWorkOut = ({
         ></i>
       </div>
       <div className={styles.rows} key={idx}>
-        {workoutList.map((el) => {
+        {workoutList.map((el, keyIdx) => {
           return (
             <Row
+              key={keyIdx}
               workoutList={workoutList}
               idx={idx}
               el={el}

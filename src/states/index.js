@@ -1,15 +1,11 @@
 import { atom, selector } from "recoil";
 import _ from "lodash";
-import { recoilPersist } from "recoil-persist";
 
-const { persistAtom } = recoilPersist();
-
-export const nowWorkingOrFinishState = atom({
-  key: "nowWorkingOrFinish",
+export const nowWorkingState = atom({
+  key: "nowWorkingState",
   default: {
     nowWorking: false,
   },
-  effects_UNSTABLE: [persistAtom],
 });
 
 export const loadingState = atom({
@@ -30,7 +26,6 @@ export const userState = atom({
 export const workoutState = atom({
   key: "workoutState",
   default: [],
-  effects_UNSTABLE: [persistAtom],
 });
 
 export const allWorkoutState = atom({
@@ -42,7 +37,6 @@ export const allWorkoutState = atom({
 export const timeState = atom({
   key: "timeState",
   default: { startTime: "", endTime: "" },
-  effects_UNSTABLE: [persistAtom],
 });
 
 export const dateWorkoutState = atom({
@@ -58,7 +52,7 @@ export const recordWorkoutState = atom({
 // 3
 export const durationState = selector({
   key: "durationState",
-  effects_UNSTABLE: [persistAtom],
+
   get: ({ get }) => {
     const time = get(timeState);
     const strtTime = time.startTime.format("HH:mm:ss").split(":");
@@ -102,7 +96,7 @@ export const durationState = selector({
 //4
 export const bestSetState = selector({
   key: "bestSetState",
-  effects_UNSTABLE: [persistAtom],
+
   get: ({ get }) => {
     const workouts = get(workoutState);
     const copyWorkouts = _.cloneDeep(workouts);
@@ -131,7 +125,7 @@ export const bestSetState = selector({
 // 5
 export const workoutCntState = selector({
   key: "workoutCntState",
-  effects_UNSTABLE: [persistAtom],
+
   get: ({ get }) => {
     const workouts = get(workoutState);
     return workouts.length;

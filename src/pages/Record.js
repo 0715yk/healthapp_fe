@@ -2,19 +2,20 @@ import React, { useEffect } from "react";
 import styles from "./Record.module.css";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   workoutState,
   durationState,
   bestSetState,
   workoutCntState,
+  nowWorkingState,
 } from "../states";
 
 const Record = () => {
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const durationTime = useRecoilValue(durationState);
   const bestSets = useRecoilValue(bestSetState);
-
+  const setNowWorking = useSetRecoilState(nowWorkingState);
   const workoutCnt = useRecoilValue(workoutCntState);
   const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ const Record = () => {
   }, []);
 
   const completeWorkout = async () => {
+    setNowWorking({ nowWorking: false });
     setWorkouts([]);
     navigate("/main");
   };
