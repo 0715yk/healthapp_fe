@@ -3,11 +3,12 @@ import styles from "./WorkOut.module.css";
 import TimeLapse from "../../components/TimeLapse";
 import WorkOutList from "../../components/WorkOutList/WorkOutList";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { workoutState } from "../../states";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { nowWorkingState, workoutState } from "../../states";
 import Modal from "../../components/Modal/Modal";
 
 const WorkOut = ({ user }) => {
+  const setNowWorking = useSetRecoilState(nowWorkingState);
   const [btnOption, setBtnOption] = useState(false);
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
@@ -103,6 +104,7 @@ const WorkOut = ({ user }) => {
 
   const closeModal = useCallback(() => {
     if (btnOption) {
+      setNowWorking({ nowWorking: false });
       setBtnOption(false);
       setModalOn({ on: false, message: "" });
       setWorkouts([]);
@@ -110,7 +112,7 @@ const WorkOut = ({ user }) => {
     } else {
       setModalOn((prev) => ({ on: !prev.on, message: prev.message }));
     }
-  }, [btnOption, setModalOn, navigate, setWorkouts]);
+  }, [setNowWorking, btnOption, setModalOn, navigate, setWorkouts]);
 
   const cancelModal = () => {
     setModalOn({ on: false, message: "" });
