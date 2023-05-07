@@ -8,6 +8,7 @@ import { isMobile } from "react-device-detect";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { loadingState } from "./states";
 import { useRecoilValue } from "recoil";
+import About from "./pages/About";
 
 function App() {
   const isLoading = useRecoilValue(loadingState);
@@ -18,25 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/main/*" element={<Main />} />
-          <Route
-            path="/about"
-            element={
-              <div
-                style={{
-                  background: "black",
-                  width: "100vw",
-                  height: "100vh",
-                  color: "#FFFFFF",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "30px",
-                }}
-              >
-                About Page
-              </div>
-            }
-          />
+          <Route path="/about" element={<About />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </NavBar>

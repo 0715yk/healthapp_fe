@@ -27,6 +27,10 @@
   align-items: center;
 }
 
+.rows:last-child {
+  margin-bottom: 200px;
+}
+
 #addBtn {
   margin-top: 15px;
   width: 100%;

@@ -6,10 +6,12 @@
 }
 
 .workoutPage {
-  overflow-y: scroll;
   background-color: black;
   min-width: 100vw;
   min-height: 100vh;
+  top: 0;
+  left: 0;
+  position: fixed;
   padding-bottom: calc(120px + 10vh);
 }
 

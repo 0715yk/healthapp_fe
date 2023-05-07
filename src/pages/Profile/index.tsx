@@ -45,7 +45,7 @@ const Profile = () => {
           fontSize: "13vw",
           textAlign: "left",
           marginLeft: "15px",
-          paddingTop: "20px",
+          paddingTop: "40px",
         }}
       />
       <div className={styles.bodyPart}>

@@ -78,6 +78,7 @@ const WorkoutMain = () => {
           fontSize: "13vw",
           textAlign: "left",
           marginLeft: "15px",
+          paddingTop: "40px",
         }}
       />
       <main>
