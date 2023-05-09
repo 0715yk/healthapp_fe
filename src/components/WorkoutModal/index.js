@@ -16,7 +16,8 @@ const WorkoutModal = () => {
     navigate("/main");
   };
 
-  const setFixModeFunc = () => {
+  const setFixModeFunc = (e) => {
+    e.stopPropagation();
     setFixMode((prev) => !prev);
   };
 

@@ -40,6 +40,15 @@ const WorkoutSet = ({
   }, []);
 
   useEffect(() => {
+    if (fixMode) {
+      setInputValue({
+        kg: el.kg,
+        reps: el.reps,
+      });
+    }
+  }, [fixMode, setInputValue, el]);
+
+  useEffect(() => {
     if (fixMode === false) {
       setSetUpdateOn(false);
     }
