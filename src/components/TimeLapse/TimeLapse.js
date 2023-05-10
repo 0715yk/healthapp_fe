@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./TimeLapse.module.css";
 import { useRecoilValue } from "recoil";
-import { timeState } from "../states";
+import { timeState } from "../../states";
 import moment from "moment";
 
 const TimeLapse = () => {

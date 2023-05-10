@@ -38,6 +38,10 @@ const WorkoutMain = () => {
 
   useEffect(() => {
     setSelectedDate(null);
+
+    return () => {
+      setLoadingSpinner({ isLoading: false });
+    };
   }, []);
 
   const getWorkoutData = async (selectedDate) => {

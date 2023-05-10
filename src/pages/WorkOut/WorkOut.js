@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import styles from "./WorkOut.module.css";
-import TimeLapse from "../../components/TimeLapse";
+import TimeLapse from "../../components/TimeLapse/TimeLapse";
 import WorkOutList from "../../components/WorkOutList/WorkOutList";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";

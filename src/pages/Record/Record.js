@@ -9,7 +9,7 @@ import {
   bestSetState,
   workoutCntState,
   nowWorkingState,
-} from "../states";
+} from "../../states";
 
 const Record = () => {
   const [workouts, setWorkouts] = useRecoilState(workoutState);

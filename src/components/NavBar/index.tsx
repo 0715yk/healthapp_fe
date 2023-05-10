@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { nowWorkingState, workoutState } from "src/states";
+import { loadingState, nowWorkingState, workoutState } from "src/states";
 import Modal from "../Modal/Modal";
 
 let headingUrl = "";

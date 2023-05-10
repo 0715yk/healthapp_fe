@@ -11,7 +11,13 @@ const Modal = ({
   return (
     modalOn.on && (
       <div className={styles.safetyArea}>
-        <div className={styles.modal}>
+        <div
+          className={styles.modal}
+          style={{
+            height: cancelModalOn ? "25vh" : null,
+            width: cancelModalOn ? "80vw" : null,
+          }}
+        >
           <section>{modalOn.message}</section>
           <div className={styles.btnWrapper}>
             {btnOption && (

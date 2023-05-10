@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import Record from "../Record";
+import Record from "../Record/Record";
 import WorkOut from "../WorkOut/WorkOut";
 import WorkoutModal from "../../components/WorkoutModal";
 import WorkoutMain from "../WorkoutMain";

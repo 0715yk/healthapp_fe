@@ -10,10 +10,14 @@
   margin-top: 10px;
   color: white;
 }
+
 .scorePart {
   display: flex;
   flex-direction: column;
   color: white;
+  overflow-y: scroll;
+  padding-bottom: 100px;
+  box-sizing: border-box;
 }
 
 .workoutPart {

@@ -10,7 +10,7 @@
 #deleteBtn {
   color: white;
   margin-left: 15px;
-  font-size: 18px;
+  font-size: 1.1rem;
   position: relative;
   bottom: 3px;
 }
@@ -55,7 +55,7 @@
   touch-action: manipulation;
   white-space: nowrap;
   will-change: box-shadow, transform;
-  font-size: 15px;
+  font-size: 1rem;
   font-weight: bold;
 }
 

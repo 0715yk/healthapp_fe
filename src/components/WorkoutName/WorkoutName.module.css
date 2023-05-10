@@ -1,5 +1,5 @@
 .workoutName {
-  font-size: 20px;
+  font-size: 1.3rem;
   margin-top: 20px;
 }
 
@@ -22,7 +22,7 @@
   border: none;
   background-color: black;
   color: white;
-  font-size: 20px;
+  font-size: 1.3rem;
   outline: none;
 }
 

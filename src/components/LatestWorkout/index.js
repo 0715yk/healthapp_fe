@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styles from "./LatestWorkout.module.css";
 import { customAxios } from "src/utils/axios";
 import { useSetRecoilState } from "recoil";
@@ -32,7 +32,12 @@ const LatestWorkout = () => {
 
   useEffect(() => {
     void getLatest();
+    const rect = divRef.current.getBoundingClientRect();
+    setRectHeight(rect.y);
   }, []);
+
+  const [rectHeight, setRectHeight] = useState(0);
+  const divRef = useRef(null);
 
   return (
     <div className={styles.latestWorkout}>
@@ -40,7 +45,10 @@ const LatestWorkout = () => {
       <div className={styles.date}>{`Latest Workout Date : ${date}`}</div>
       <div
         className={styles.scorePart}
-        style={workouts.length === 0 ? { marginTop: "25px" } : null}
+        ref={divRef}
+        style={{
+          height: `calc(100vh - ${80 + rectHeight}px)`,
+        }}
       >
         {workouts.length !== 0
           ? workouts.map((workout) => {
