@@ -18,6 +18,10 @@ const NavBar = ({ children }) => {
   useEffect(() => {
     const pathName = location.pathname;
     const splitedName = pathName.split("/")[1];
+    if (splitedName === "about") {
+      window.postMessage(true);
+    }
+
     if (splitedName === "main") {
       setNowUrl("/main");
     } else {
