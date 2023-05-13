@@ -17,6 +17,7 @@
   justify-content: center;
   z-index: 999;
   font-size: 15px;
+  width: 60vw;
 }
 
 .modal button {
@@ -32,7 +33,7 @@
 
 .modal {
   width: 70vw;
-  height: 20vh;
+  height: 23vh;
   z-index: 99;
   border-radius: 10px !important;
   position: relative;
@@ -87,7 +88,7 @@
   content: "";
   position: absolute;
   width: 70vw;
-  height: 20vh;
+  height: 23vh;
   background: #111;
   left: 0;
   top: 0;

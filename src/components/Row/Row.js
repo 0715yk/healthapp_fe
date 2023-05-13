@@ -120,10 +120,28 @@ const Row = ({ idx, el, workoutList }) => {
       />
       <div>{`set ${el.set}`}</div>
       <div id={styles.kgInput}>
-        kg : {el.done ? el.kg : <input ref={kgRef} type="number" />}
+        kg :{" "}
+        {el.done ? (
+          String(el.kg).length >= 5 ? (
+            `${String(el.kg).substring(0, 5)}...`
+          ) : (
+            el.kg
+          )
+        ) : (
+          <input ref={kgRef} type="number" />
+        )}
       </div>
       <div id={styles.repsInput}>
-        reps : {el.done ? el.reps : <input ref={repsRef} type="number" />}
+        reps :{" "}
+        {el.done ? (
+          String(el.reps).length >= 5 ? (
+            `${String(el.reps).substring(0, 5)}...`
+          ) : (
+            el.reps
+          )
+        ) : (
+          <input ref={repsRef} type="number" />
+        )}
       </div>
       <button
         className={styles.clearRowBtn}

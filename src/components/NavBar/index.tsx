@@ -7,6 +7,14 @@ import Modal from "../Modal/Modal";
 
 let headingUrl = "";
 
+declare global {
+  interface Window {
+    ReactNativeWebView: {
+      postMessage: any;
+    };
+  }
+}
+
 const NavBar = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,8 +26,10 @@ const NavBar = ({ children }) => {
   useEffect(() => {
     const pathName = location.pathname;
     const splitedName = pathName.split("/")[1];
-    if (splitedName === "about") {
-      window.postMessage(true);
+    if (window?.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ data: splitedName })
+      );
     }
 
     if (splitedName === "main") {

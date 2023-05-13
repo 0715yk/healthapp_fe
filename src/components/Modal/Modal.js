@@ -16,7 +16,14 @@ const Modal = ({
           <div className={styles.btnWrapper}>
             {btnOption && (
               <>
-                <button onClick={closeModal}>Confirm</button>
+                <button
+                  onClick={closeModal}
+                  style={{
+                    marginTop: !cancelModalOn ? "5vh" : null,
+                  }}
+                >
+                  Confirm
+                </button>
                 {cancelModalOn && (
                   <button className={styles.bottomBtn} onClick={cancelModal}>
                     Cancel
