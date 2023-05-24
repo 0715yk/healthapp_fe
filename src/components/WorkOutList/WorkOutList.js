@@ -9,7 +9,7 @@ import { workoutState, timeState, loadingState } from "../../states";
 import { customAxios } from "src/utils/axios";
 import _ from "lodash";
 
-const WorkOutList = () => {
+const WorkOutList = ({ offsetHeight }) => {
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const [time, setTime] = useRecoilState(timeState);
@@ -112,7 +112,7 @@ const WorkOutList = () => {
   };
 
   return (
-    <div className={styles.writeFunc}>
+    <div className={styles.writeFunc} style={{ paddingTop: offsetHeight }}>
       <Modal
         modalOn={modalOn}
         closeModal={closeModal}

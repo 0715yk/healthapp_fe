@@ -5,16 +5,17 @@
   display: flex;
   align-items: center;
   color: white;
-  font-size: 6vw;
+  font-size: 6.5vw;
 }
 
 .title input {
   background-color: black;
   color: white;
-  font-size: 6vw;
+  font-size: 6.5vw;
   border: none;
   outline: none;
   width: 100%;
+  display: flex;
 }
 
 .rows {
@@ -44,12 +45,18 @@
 
 #fixBtn {
   margin-left: 10px;
-  font-size: 4vw !important;
+  font-size: 5.5vw !important;
   color: white !important;
 }
 
 #deleteBtn {
   margin-left: 10px;
-  font-size: 4vw !important;
+  font-size: 5.5vw !important;
   color: white !important;
+}
+
+.titleScroll {
+  overflow-x: scroll;
+  white-space: nowrap;
+  max-width: 70vw;
 }

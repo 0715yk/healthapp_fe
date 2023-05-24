@@ -1,6 +1,4 @@
 .writeFunc {
-  padding-top: 190px;
-
   padding-bottom: 200px;
   height: calc(100vh - 270px);
   overflow-y: auto;

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import styles from "./WorkOut.module.css";
 import TimeLapse from "../../components/TimeLapse/TimeLapse";
 import WorkOutList from "../../components/WorkOutList/WorkOutList";
@@ -118,6 +118,14 @@ const WorkOut = ({ user }) => {
     setModalOn({ on: false, message: "" });
   };
 
+  const [offsetHeight, setOffsetHeight] = useState(0);
+  const articleRef = useRef(null);
+
+  useEffect(() => {
+    const offsetHeightValue = articleRef.current.offsetHeight;
+    setOffsetHeight(offsetHeightValue);
+  }, []);
+
   return (
     <div className={styles.workoutPage}>
       <Modal
@@ -127,7 +135,7 @@ const WorkOut = ({ user }) => {
         closeModal={closeModal}
       />
       <main>
-        <article className={styles.stickyNav}>
+        <article className={styles.stickyNav} ref={articleRef}>
           <TimeLapse />
           <article className={styles.registerArea}>
             <div className={styles.inputArea}>
@@ -161,7 +169,7 @@ const WorkOut = ({ user }) => {
             Cancel Workout
           </button>
         </article>
-        <WorkOutList user={user} />
+        <WorkOutList offsetHeight={offsetHeight} />
       </main>
     </div>
   );

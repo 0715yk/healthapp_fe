@@ -158,3 +158,9 @@ td {
   justify-content: flex-start;
   width: 90vw;
 }
+
+.workoutName {
+  width: 60vw;
+  overflow-x: scroll;
+  white-space: nowrap;
+}

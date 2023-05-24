@@ -14,7 +14,7 @@ const Modal = ({
         <div
           className={styles.modal}
           style={{
-            height: cancelModalOn ? "25vh" : null,
+            height: cancelModalOn ? "22vh" : null,
             width: cancelModalOn ? "80vw" : null,
           }}
         >
@@ -22,7 +22,14 @@ const Modal = ({
           <div className={styles.btnWrapper}>
             {btnOption && (
               <>
-                <button onClick={closeModal}>Confirm</button>
+                <button
+                  onClick={closeModal}
+                  style={{
+                    marginTop: !cancelModalOn ? "1vh" : null,
+                  }}
+                >
+                  Confirm
+                </button>
                 {cancelModalOn && (
                   <button className={styles.bottomBtn} onClick={cancelModal}>
                     Cancel

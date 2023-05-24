@@ -1,5 +1,5 @@
 .workoutName {
-  font-size: 1.3rem;
+  font-size: 8vw;
   margin-top: 20px;
 }
 
@@ -24,6 +24,7 @@
   color: white;
   font-size: 1.3rem;
   outline: none;
+  width: 50vw;
 }
 
 #deleteBtn {
@@ -37,4 +38,21 @@
   display: flex;
   position: relative;
   bottom: 1px;
+}
+
+.workoutNamePart {
+  overflow: scroll;
+  white-space: nowrap;
+}
+
+.workoutNameUpdatePart {
+  display: flex;
+}
+
+.nonFixModeWorkoutName {
+  overflow-x: scroll;
+  white-space: nowrap;
+  width: 80vw;
+  font-size: 8vw;
+  margin-top: 20px;
 }

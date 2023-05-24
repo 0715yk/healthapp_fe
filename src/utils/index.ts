@@ -5,7 +5,7 @@ const getByteLength = (decimal: number): number => {
   return decimal >> 7 || LINE_FEED === decimal ? 2 : 1;
 };
 
-const getByte = (str: string): number => {
+export const getByte = (str: string): number => {
   return str
     .split("")
     .map((s) => s.charCodeAt(0))
@@ -15,7 +15,11 @@ const getByte = (str: string): number => {
     );
 };
 
-const checkByteLength = (param: string, min: number, max: number): number => {
+export const checkByteLength = (
+  param: string,
+  min: number,
+  max: number
+): number => {
   if (getByte(param) >= min && getByte(param) <= max) {
     return SUCEED_STATUS_CODE;
   } else if (getByte(param) > max) {

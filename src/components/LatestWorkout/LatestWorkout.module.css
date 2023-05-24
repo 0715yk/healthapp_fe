@@ -32,3 +32,9 @@
   background-color: black;
   color: white;
 }
+
+.workoutName {
+  width: 70vw;
+  overflow-x: scroll;
+  white-space: nowrap;
+}

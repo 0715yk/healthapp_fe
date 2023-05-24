@@ -12,6 +12,7 @@ import About from "./pages/About";
 
 function App() {
   const isLoading = useRecoilValue(loadingState);
+
   return isMobile ? (
     <BrowserRouter>
       <NavBar>

@@ -4,6 +4,7 @@ import Row from "../Row/Row";
 import { useRecoilState } from "recoil";
 import { workoutState } from "../../states";
 import Modal from "../Modal/Modal";
+import { checkByteLength } from "src/utils";
 
 const PureWorkOut = ({
   workout,
@@ -117,7 +118,9 @@ const PureWorkOut = ({
         {fixMode ? (
           <input ref={titleRef} onKeyDown={handleKeyDown} />
         ) : (
-          workouts[idx] && workouts[idx][0]?.name
+          <div className={styles.titleScroll}>
+            {workouts[idx] && workouts[idx][0]?.name}
+          </div>
         )}
         <i className="far fa-edit" id={styles.fixBtn} onClick={fixTitle}></i>
         <i

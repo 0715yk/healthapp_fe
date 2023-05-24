@@ -201,6 +201,7 @@ const WorkoutSet = ({
             <div className={styles.setUpdatePart}>
               <div>{`set ${setIdx} : `}&nbsp;</div>
               <input
+                type="number"
                 className={styles.setInput}
                 value={inputValue?.kg}
                 onKeyDown={handleKeyDown}
@@ -214,6 +215,7 @@ const WorkoutSet = ({
                 className={styles.setInput}
                 value={inputValue?.reps}
                 onKeyDown={handleKeyDown}
+                type="number"
                 onChange={(e) =>
                   setInputValue((prev) => ({ ...prev, reps: e.target.value }))
                 }
@@ -236,7 +238,15 @@ const WorkoutSet = ({
             </div>
           ) : (
             <>
-              {`set ${setIdx} : ${el?.kg || 0} kg x ${el?.reps || 0} reps`}
+              {`set ${setIdx} : ${
+                String(el.kg).length >= 5
+                  ? `${String(el.kg).substring(0, 4)}...`
+                  : el.kg || 0
+              } kg x ${
+                String(el.reps).length >= 5
+                  ? `${String(el.reps).substring(0, 4)}...`
+                  : el.reps || 0
+              } reps`}
               <i
                 className="far fa-edit"
                 id={styles.fixBtn}
@@ -248,8 +258,18 @@ const WorkoutSet = ({
           )}
         </>
       ) : (
-        `set ${setIdx} : ${el.kg === null ? 0 : el.kg} kg x ${
-          el.reps === null ? 0 : el.reps
+        `set ${setIdx} : ${
+          el.kg === null
+            ? 0
+            : String(el.kg).length >= 5
+            ? `${String(el.kg).substring(0, 5)}...`
+            : el.kg
+        } kg x ${
+          el.reps === null
+            ? 0
+            : String(el.reps).length >= 5
+            ? `${String(el.kg).substring(0, 5)}...`
+            : el.reps
         } reps`
       )}
     </div>

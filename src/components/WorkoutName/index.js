@@ -173,8 +173,8 @@ const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
       </div>
     </div>
   ) : (
-    <>
-      {el?.workoutName}
+    <div className={styles.workoutNameUpdatePart}>
+      <span className={styles.workoutNamePart}>{el?.workoutName}</span>
       <i
         className="far fa-edit"
         id={styles.updateBtn}
@@ -182,10 +182,14 @@ const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
           setWorkoutUpdateOn((prev) => !prev);
         }}
       ></i>
-    </>
+    </div>
   );
-  const workoutNameComponent = fixMode ? updateModeComponent : el?.workoutName;
-  return <div className={styles.workoutName}>{workoutNameComponent}</div>;
+  const workoutNameComponent = fixMode ? (
+    <div className={styles.workoutName}>{updateModeComponent}</div>
+  ) : (
+    <div className={styles.nonFixModeWorkoutName}>{el?.workoutName}</div>
+  );
+  return workoutNameComponent;
 };
 
 export default WorkoutName;

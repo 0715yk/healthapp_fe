@@ -10,6 +10,7 @@ import {
   workoutCntState,
   nowWorkingState,
 } from "../../states";
+import { checkByteLength } from "src/utils";
 
 const Record = () => {
   const [workouts, setWorkouts] = useRecoilState(workoutState);
@@ -55,9 +56,19 @@ const Record = () => {
               <ul list-style="none">
                 {bestSets.map((el, keyIdex) => {
                   return (
-                    <li
-                      key={keyIdex}
-                    >{`${el.name} : ${el.kg} kg x ${el.reps} reps`}</li>
+                    <li key={keyIdex}>{`${
+                      checkByteLength(el?.name, 0, 26) !== 2000
+                        ? `${el?.name.substring(0, 13)}...`
+                        : el?.name
+                    } : ${
+                      String(el.kg).length >= 5
+                        ? `${String(el.kg).substring(0, 5)}...`
+                        : el.kg || 0
+                    } kg x ${
+                      String(el.reps).length >= 5
+                        ? `${String(el.reps).substring(0, 5)}...`
+                        : el.reps || 0
+                    } reps`}</li>
                   );
                 })}
               </ul>
@@ -71,14 +82,24 @@ const Record = () => {
           {workouts.map((workout, keyIdx) => {
             return (
               <section key={keyIdx}>
-                <h3>{workout[0].name}</h3>
+                <h3 className={styles.workoutName}>{workout[0]?.name}</h3>
                 <section id={styles.workoutList}>
                   {workout.map((el, key) => {
                     return (
                       <div className={styles.record} key={key}>{`set ${
                         key + 1
-                      } : ${el.kg === null ? 0 : el.kg} kg x ${
-                        el.reps === null ? 0 : el.reps
+                      } : ${
+                        el.kg === null
+                          ? 0
+                          : String(el.kg).length >= 5
+                          ? `${String(el.kg).substring(0, 5)}...`
+                          : el.kg || 0
+                      } kg x ${
+                        el.reps === null
+                          ? 0
+                          : String(el.reps).length >= 5
+                          ? `${String(el.reps).substring(0, 5)}...`
+                          : el.reps || 0
                       } reps`}</div>
                     );
                   })}

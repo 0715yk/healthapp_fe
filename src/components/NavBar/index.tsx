@@ -2,10 +2,18 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { loadingState, nowWorkingState, workoutState } from "src/states";
+import { nowWorkingState, workoutState } from "src/states";
 import Modal from "../Modal/Modal";
 
 let headingUrl = "";
+
+declare global {
+  interface Window {
+    ReactNativeWebView: {
+      postMessage: any;
+    };
+  }
+}
 
 const NavBar = ({ children }) => {
   const navigate = useNavigate();
@@ -18,6 +26,12 @@ const NavBar = ({ children }) => {
   useEffect(() => {
     const pathName = location.pathname;
     const splitedName = pathName.split("/")[1];
+    if (window?.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ data: splitedName })
+      );
+    }
+
     if (splitedName === "main") {
       setNowUrl("/main");
     } else {

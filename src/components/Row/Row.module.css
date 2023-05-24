@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  font-size: 4.5vw;
 }
 
 #kgInput {
@@ -18,7 +19,7 @@
 }
 
 .rowInput input {
-  width: 50px;
+  width: 12vw;
   outline: none;
   margin-left: 4px;
 }
