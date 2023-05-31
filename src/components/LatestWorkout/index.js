@@ -3,7 +3,6 @@ import styles from "./LatestWorkout.module.css";
 import { customAxios } from "src/utils/axios";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "src/states";
-import { checkByteLength } from "src/utils";
 
 const LatestWorkout = () => {
   const [workouts, setWorkouts] = useState([]);

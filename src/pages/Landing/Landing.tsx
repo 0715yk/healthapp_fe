@@ -12,23 +12,35 @@ const Landing = () => {
 
   const setUserNickname = useSetRecoilState(userState);
 
-  const scrollRef = useRef(null);
-  const buttonRef = useRef(null);
-  const upperRef = useRef(null);
-  const lowerRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const upperRef = useRef<HTMLDivElement | null>(null);
+  const lowerRef = useRef<HTMLDivElement | null>(null);
 
   const startFunc = () => {
-    upperRef.current.style.transform = "translate(-100vw,0)";
-    lowerRef.current.style.transform = "translate(100vw,0)";
-    buttonRef.current.style.transform = "translate(100vw,0)";
-    scrollRef.current.style.transform = "translate(0,-100vh)";
+    if (
+      upperRef?.current &&
+      lowerRef?.current &&
+      buttonRef?.current &&
+      scrollRef?.current
+    ) {
+      upperRef.current.style.transform = "translate(-100vw,0)";
+      lowerRef.current.style.transform = "translate(100vw,0)";
+      buttonRef.current.style.transform = "translate(100vw,0)";
+      scrollRef.current.style.transform = "translate(0,-100vh)";
+    }
   };
 
   useEffect(() => {
-    upperRef.current.style.transform = "translate(100vw,0)";
-    lowerRef.current.style.transform = "translate(-100vw,0)";
+    if (upperRef?.current && lowerRef?.current) {
+      upperRef.current.style.transform = "translate(100vw,0)";
+      lowerRef.current.style.transform = "translate(-100vw,0)";
+    }
+
     const setButtonStyle = setTimeout(() => {
-      buttonRef.current.style.transform = "translate(0,-100vh)";
+      if (buttonRef?.current) {
+        buttonRef.current.style.transform = "translate(0,-100vh)";
+      }
     }, 800);
 
     return () => {

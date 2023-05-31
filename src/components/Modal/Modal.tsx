@@ -1,5 +1,14 @@
 import React from "react";
 import styles from "./Modal.module.css";
+import { ModalData } from "./types";
+
+interface Props {
+  modalOn: ModalData;
+  closeModal: () => void;
+  cancelModalOn: boolean;
+  cancelModal: () => void;
+  btnOption: boolean;
+}
 
 const Modal = ({
   modalOn,
@@ -7,16 +16,20 @@ const Modal = ({
   cancelModalOn = false,
   cancelModal = () => {},
   btnOption = true,
-}) => {
+}: Props) => {
   return (
     modalOn.on && (
       <div className={styles.safetyArea}>
         <div
           className={styles.modal}
-          style={{
-            height: cancelModalOn ? "22vh" : null,
-            width: cancelModalOn ? "80vw" : null,
-          }}
+          style={
+            cancelModalOn
+              ? {
+                  height: "22vh",
+                  width: "80vw",
+                }
+              : {}
+          }
         >
           <section>{modalOn.message}</section>
           <div className={styles.btnWrapper}>
@@ -24,9 +37,13 @@ const Modal = ({
               <>
                 <button
                   onClick={closeModal}
-                  style={{
-                    marginTop: !cancelModalOn ? "1vh" : null,
-                  }}
+                  style={
+                    !cancelModalOn
+                      ? {
+                          marginTop: "1vh",
+                        }
+                      : {}
+                  }
                 >
                   Confirm
                 </button>

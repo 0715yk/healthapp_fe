@@ -69,6 +69,10 @@ const NavBar = ({ children }) => {
   const cancelModal = () => {
     setModalOn({ on: false, message: "" });
   };
+
+  useEffect(() => {
+    console.log(location.pathname);
+  }, [location.pathname]);
   return (
     <>
       {children}

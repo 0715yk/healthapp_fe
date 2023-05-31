@@ -14,6 +14,7 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
     on: false,
     message: "정말 삭제하시겠습니까?",
   });
+  
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -31,6 +32,7 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
       });
       if (response.status === 200) {
         let copyWorkout = _.cloneDeep(recordWorkout);
+
         copyWorkout = copyWorkout.filter((el, _) => {
           if (_ === idx) return false;
           else return true;

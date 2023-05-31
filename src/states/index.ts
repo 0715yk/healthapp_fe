@@ -1,63 +1,67 @@
 import { atom, selector } from "recoil";
 import _ from "lodash";
+import {
+  Loading,
+  NowWorking,
+  Duration,
+  User,
+  Time,
+  RecordWorkouts,
+  Record,
+  BestSet,
+  WorkoutCount,
+} from "./types";
 
-export const nowWorkingState = atom({
+declare global {
+  interface String {
+    format(arg: string): string;
+  }
+}
+
+export const nowWorkingState = atom<NowWorking>({
   key: "nowWorkingState",
   default: {
     nowWorking: false,
   },
 });
 
-export const loadingState = atom({
+export const loadingState = atom<Loading>({
   key: "loadingState",
   default: {
     isLoading: false,
   },
 });
 
-export const userState = atom({
+export const userState = atom<User>({
   key: "userState",
   default: {
     nickname: "",
   },
 });
 
-// 1
-export const workoutState = atom({
+export const workoutState = atom<Record>({
   key: "workoutState",
   default: [],
 });
 
-export const allWorkoutState = atom({
-  key: "allWorkoutState",
-  default: [],
-});
-
-// 2
-export const timeState = atom({
+export const timeState = atom<Time>({
   key: "timeState",
   default: { startTime: "", endTime: "" },
 });
 
-export const dateWorkoutState = atom({
-  key: "dateWorkoutState",
-  default: [],
-});
-
-export const recordWorkoutState = atom({
+export const recordWorkoutState = atom<RecordWorkouts>({
   key: "recordWorkoutState",
   default: [],
 });
 
-// 3
-export const durationState = selector({
+export const durationState = selector<Duration>({
   key: "durationState",
 
   get: ({ get }) => {
     const time = get(timeState);
     const strtTime = time.startTime.format("HH:mm:ss").split(":");
     const endTime = time.endTime.format("HH:mm:ss").split(":");
-    const result = {};
+    const result = {} as Duration;
     result.startTime = time.startTime.format("HH:mm:ss");
     result.endTime = time.endTime.format("HH:mm:ss");
 
@@ -93,10 +97,8 @@ export const durationState = selector({
   },
 });
 
-//4
-export const bestSetState = selector({
+export const bestSetState = selector<BestSet>({
   key: "bestSetState",
-
   get: ({ get }) => {
     const workouts = get(workoutState);
     const copyWorkouts = _.cloneDeep(workouts);
@@ -122,8 +124,7 @@ export const bestSetState = selector({
   },
 });
 
-// 5
-export const workoutCntState = selector({
+export const workoutCntState = selector<WorkoutCount>({
   key: "workoutCntState",
 
   get: ({ get }) => {

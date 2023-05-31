@@ -19,7 +19,7 @@ const Record = () => {
   const setNowWorking = useSetRecoilState(nowWorkingState);
   const workoutCnt = useRecoilValue(workoutCntState);
   const navigate = useNavigate();
-
+  console.log(workoutCnt);
   useEffect(() => {
     window.scrollTo(0, 0);
 

@@ -12,8 +12,8 @@ import { loadingState, userState } from "src/states";
 const SignUp = React.forwardRef(({}, ref) => {
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const navigate = useNavigate();
-  const idRef = useRef();
-  const pwdRef = useRef();
+  const idRef = useRef<HTMLInputElement | null>(null);
+  const pwdRef = useRef<HTMLInputElement | null>(null);
   const nicknameRef = useRef();
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
   const setUserState = useSetRecoilState(userState);
@@ -22,8 +22,10 @@ const SignUp = React.forwardRef(({}, ref) => {
   };
 
   const backBtn = () => {
-    ref.current.style.transitionDuration = "1200ms";
-    ref.current.style.transform = "translate(100vw, 0)";
+    if (ref?.current) {
+      ref.current.style.transitionDuration = "1200ms";
+      ref.current.style.transform = "translate(100vw, 0)";
+    }
   };
 
   const signup = async () => {

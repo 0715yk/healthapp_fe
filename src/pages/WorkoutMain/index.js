@@ -3,12 +3,11 @@ import styles from "./WorkoutMain.module.css";
 import moment from "moment";
 import {
   timeState,
-  dateWorkoutState,
   recordWorkoutState,
   loadingState,
   nowWorkingState,
 } from "../../states";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +21,6 @@ const WorkoutMain = () => {
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
-  const dateWorkout = useRecoilValue(dateWorkoutState);
   const setRecordWorkout = useSetRecoilState(recordWorkoutState);
   const [time, setTime] = useRecoilState(timeState);
   const setNowWorking = useSetRecoilState(nowWorkingState);
@@ -106,7 +104,7 @@ const WorkoutMain = () => {
           />
         </article>
         <article>
-          <LatestWorkout dateWorkout={dateWorkout} />
+          <LatestWorkout />
         </article>
       </main>
     </div>
