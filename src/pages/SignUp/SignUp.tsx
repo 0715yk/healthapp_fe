@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { ForwardedRef, useRef, useState } from "react";
 import styles from "./SignUp.module.css";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal/Modal";
@@ -8,13 +8,14 @@ import { customAxios } from "src/utils/axios";
 import cookies from "react-cookies";
 import { useSetRecoilState } from "recoil";
 import { loadingState, userState } from "src/states";
+import axios from "axios";
 
-const SignUp = React.forwardRef(({}, ref) => {
+const SignUp = React.forwardRef(({}, ref: ForwardedRef<HTMLDivElement>) => {
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const navigate = useNavigate();
   const idRef = useRef<HTMLInputElement | null>(null);
   const pwdRef = useRef<HTMLInputElement | null>(null);
-  const nicknameRef = useRef();
+  const nicknameRef = useRef<HTMLInputElement | null>(null);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
   const setUserState = useSetRecoilState(userState);
   const closeModal = () => {
@@ -22,52 +23,56 @@ const SignUp = React.forwardRef(({}, ref) => {
   };
 
   const backBtn = () => {
-    if (ref?.current) {
+    if (typeof ref !== "function" && ref?.current) {
       ref.current.style.transitionDuration = "1200ms";
       ref.current.style.transform = "translate(100vw, 0)";
     }
   };
 
   const signup = async () => {
-    const id = idRef.current.value;
-    const password = pwdRef.current.value;
-    const nickname = nicknameRef.current.value;
-    const message = validateSignupForm(id, password, nickname);
-    setLoadingSpinner({ isLoading: true });
-    if (message === "") {
-      try {
-        const response = await customAxios.post("/users", {
-          userId: id,
-          password,
-          nickname,
-        });
-        const token = response?.data?.jwtToken;
-        cookies.save("access_token", token, {
-          path: "/",
-          // secure : true,
-          // httpOnly: true,
-        });
-        setLoadingSpinner({ isLoading: false });
-        setUserState({
-          nickname,
-        });
-        navigate("/main");
-      } catch (err) {
-        const message =
-          err?.response?.data?.message ??
-          "서버 에러 입니다. 잠시후 다시 시도해주세요.";
+    if (idRef?.current && pwdRef?.current && nicknameRef?.current) {
+      const id = idRef.current.value;
+      const password = pwdRef.current.value;
+      const nickname = nicknameRef.current.value;
+      const message = validateSignupForm(id, password, nickname);
+      setLoadingSpinner({ isLoading: true });
+      if (message === "") {
+        try {
+          const response = await customAxios.post("/users", {
+            userId: id,
+            password,
+            nickname,
+          });
+          const token = response?.data?.jwtToken;
+          cookies.save("access_token", token, {
+            path: "/",
+            // secure : true,
+            // httpOnly: true,
+          });
+          setLoadingSpinner({ isLoading: false });
+          setUserState({
+            nickname,
+          });
+          navigate("/main");
+        } catch (err: unknown) {
+          if (axios.isAxiosError(err)) {
+            const message =
+              err?.response?.data?.message ??
+              "서버 에러 입니다. 잠시후 다시 시도해주세요.";
+            setLoadingSpinner({ isLoading: false });
+            setModalOn({
+              on: true,
+              message: message,
+            });
+          }
+        }
+      } else {
         setLoadingSpinner({ isLoading: false });
         setModalOn({
           on: true,
           message: message,
         });
       }
-    } else {
-      setLoadingSpinner({ isLoading: false });
-      setModalOn({
-        on: true,
-        message: message,
-      });
     }
   };
 

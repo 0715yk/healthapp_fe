@@ -7,6 +7,7 @@ import { useSetRecoilState } from "recoil";
 import { loadingState, userState } from "../../states";
 import { customAxios } from "src/utils/axios";
 import cookies from "react-cookies";
+import axios from "axios";
 
 const Login = React.forwardRef(({}, ref: ForwardedRef<HTMLDivElement>) => {
   const navigate = useNavigate();
@@ -40,8 +41,6 @@ const Login = React.forwardRef(({}, ref: ForwardedRef<HTMLDivElement>) => {
         const { token, nickname } = response?.data;
         cookies.save("access_token", token, {
           path: "/",
-          // secure : true,
-          // httpOnly: true,
         });
 
         setUserState({
@@ -51,16 +50,17 @@ const Login = React.forwardRef(({}, ref: ForwardedRef<HTMLDivElement>) => {
         navigate("/main", {
           state: "login",
         });
-      } catch (err) {
-        console.log(err);
-        const message =
-          err?.response?.data?.message ??
-          "서버 에러 입니다. 잠시후 다시 시도해주세요.";
-        setLoadingSpinner({ isLoading: false });
-        setModalOn({
-          on: true,
-          message: message,
-        });
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          const message =
+            err?.response?.data?.message ??
+            "서버 에러 입니다. 잠시후 다시 시도해주세요.";
+          setLoadingSpinner({ isLoading: false });
+          setModalOn({
+            on: true,
+            message: message,
+          });
+        }
       }
     }
   }, [navigate, setLoadingSpinner, setUserState]);

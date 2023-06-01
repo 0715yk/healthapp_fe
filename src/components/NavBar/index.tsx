@@ -15,7 +15,11 @@ declare global {
   }
 }
 
-const NavBar = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const NavBar = ({ children }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [nowWorking, setNowWorking] = useRecoilState(nowWorkingState);

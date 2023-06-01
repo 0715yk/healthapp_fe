@@ -9,7 +9,11 @@ import { workoutState, timeState, loadingState } from "../../states";
 import { customAxios } from "src/utils/axios";
 import _ from "lodash";
 
-const WorkOutList = ({ offsetHeight }) => {
+interface Props {
+  offsetHeight: number;
+}
+
+const WorkOutList = ({ offsetHeight }: Props) => {
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const [time, setTime] = useRecoilState(timeState);

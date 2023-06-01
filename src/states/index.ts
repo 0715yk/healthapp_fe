@@ -11,12 +11,7 @@ import {
   BestSet,
   WorkoutCount,
 } from "./types";
-
-declare global {
-  interface String {
-    format(arg: string): string;
-  }
-}
+import moment from "moment";
 
 export const nowWorkingState = atom<NowWorking>({
   key: "nowWorkingState",
@@ -46,7 +41,7 @@ export const workoutState = atom<Record>({
 
 export const timeState = atom<Time>({
   key: "timeState",
-  default: { startTime: "", endTime: "" },
+  default: { startTime: moment(), endTime: moment() },
 });
 
 export const recordWorkoutState = atom<RecordWorkouts>({

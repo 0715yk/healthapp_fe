@@ -5,13 +5,14 @@ import Modal from "src/components/Modal/Modal";
 import { validateUserNickname, NICKNAME_VALIDATION_MESSAGE } from "src/utils";
 import { customAxios } from "src/utils/axios";
 import styles from "./style.module.css";
+import axios from "axios";
 
 const NicknameInput = () => {
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const [nicknameInput, setNicknameInput] = useState("");
   const [userInform, setUserInform] = useRecoilState(userState);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
-  const divRef = useRef(null);
+  const divRef = useRef<HTMLDivElement | null>(null);
 
   const updateUserInform = useCallback(() => {
     const nickname = userInform.nickname;
@@ -19,25 +20,13 @@ const NicknameInput = () => {
   }, [userInform.nickname]);
 
   useEffect(() => {
-    const ref = divRef.current;
-    updateUserInform();
-    document.addEventListener(
-      "click",
-      (e) => {
-        if (ref.contains(e.target)) {
-          return;
-        } else {
-          updateUserInform();
-        }
-      },
-      true
-    );
-
-    return () => {
-      document.removeEventListener(
+    const ref = divRef?.current;
+    if (ref) {
+      updateUserInform();
+      document.addEventListener(
         "click",
         (e) => {
-          if (ref.contains(e.target)) {
+          if (ref.contains(e.target as Node)) {
             return;
           } else {
             updateUserInform();
@@ -45,7 +34,21 @@ const NicknameInput = () => {
         },
         true
       );
-    };
+
+      return () => {
+        document.removeEventListener(
+          "click",
+          (e) => {
+            if (ref.contains(e.target as Node)) {
+              return;
+            } else {
+              updateUserInform();
+            }
+          },
+          true
+        );
+      };
+    }
   }, [updateUserInform]);
 
   const onChangeEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,10 +86,12 @@ const NicknameInput = () => {
               nickname: nicknameInput,
             };
           });
-        } catch (err) {
-          const response = err?.response?.data;
-          setLoadingSpinner({ isLoading: false });
-          setModalOn({ on: true, message: response?.message });
+        } catch (err: unknown) {
+          if (axios.isAxiosError(err)) {
+            const response = err?.response?.data;
+            setLoadingSpinner({ isLoading: false });
+            setModalOn({ on: true, message: response?.message });
+          }
         }
       } else {
         setLoadingSpinner({ isLoading: false });

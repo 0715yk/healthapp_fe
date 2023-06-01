@@ -1,10 +1,21 @@
 import styles from "./WorkoutSet.module.css";
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, KeyboardEvent } from "react";
 import _ from "lodash";
 import Modal from "../Modal/Modal";
 import { customAxios } from "src/utils/axios";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loadingState, recordWorkoutState } from "src/states";
+import { Workout } from "src/states/types";
+
+interface Props {
+  idx: number;
+  fixMode: boolean;
+  datesId: number;
+  workoutNameIdx: number;
+  workoutNumId: number;
+  setIdx: number;
+  el: Workout;
+}
 
 const WorkoutSet = ({
   el,
@@ -14,7 +25,7 @@ const WorkoutSet = ({
   workoutNameIdx,
   idx,
   setIdx,
-}) => {
+}: Props) => {
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const [recordWorkout, setRecordWorkout] = useRecoilState(recordWorkoutState);
   const [setUpdateOn, setSetUpdateOn] = useState(false);
@@ -55,7 +66,7 @@ const WorkoutSet = ({
   }, [fixMode]);
 
   const updateSet = useCallback(async () => {
-    if (inputValue.reps <= 0) {
+    if (parseInt(inputValue.reps) <= 0) {
       setAlertOn({
         message: "최소 한 개 이상의 reps를 입력해야 합니다.",
         on: true,
@@ -82,8 +93,10 @@ const WorkoutSet = ({
         const workoutsObj = copyWorkout[idx].workoutNames[
           workoutNameIdx
         ].workouts.find((workout) => workout.set === el.set);
-        workoutsObj.kg = inputValue.kg;
-        workoutsObj.reps = inputValue.reps;
+        if (workoutsObj) {
+          workoutsObj.kg = inputValue.kg;
+          workoutsObj.reps = inputValue.reps;
+        }
         setLoadingSpinner({ isLoading: false });
         setRecordWorkout(copyWorkout);
         setSetUpdateOn((prev) => !prev);
@@ -154,7 +167,7 @@ const WorkoutSet = ({
     }
   };
 
-  const setModalOnFunc = (e) => {
+  const setModalOnFunc = () => {
     setModalOn((prev) => {
       return { ...prev, on: !prev.on };
     });
@@ -182,7 +195,7 @@ const WorkoutSet = ({
     setSetUpdateOn((prev) => !prev);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") updateSet();
   };
 

@@ -42,7 +42,7 @@ const WorkoutMain = () => {
     };
   }, []);
 
-  const getWorkoutData = async (selectedDate) => {
+  const getWorkoutData = async (selectedDate: moment.MomentInput) => {
     // 특정 날짜 값을 받고, 쿼리로 조회
     const date = moment(selectedDate).format("YYYYMMDD");
     if (date === "") return;
@@ -98,7 +98,9 @@ const WorkoutMain = () => {
             maxDate={new Date()}
             selected={selectedDate}
             placeholderText={"Please select a date"}
-            onChangeRaw={(e) => e.preventDefault()}
+            onChangeRaw={(e: React.FocusEvent<HTMLInputElement>) =>
+              e.preventDefault()
+            }
             withPortal
             customInput={<DatepickerInput />}
           />

@@ -7,14 +7,21 @@ import WorkoutName from "../WorkoutName";
 import WorkoutSet from "../WorkoutSet";
 import _ from "lodash";
 import { customAxios } from "src/utils/axios";
+import { DailyRecordWorkout } from "src/states/types";
 
-const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
+interface Props {
+  fixMode: boolean;
+  idx: number;
+  workout: DailyRecordWorkout;
+  setFixModeFunc: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}
+const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }: Props) => {
   const [recordWorkout, setRecordWorkout] = useRecoilState(recordWorkoutState);
   const [modalOn, setModalOn] = useState({
     on: false,
     message: "정말 삭제하시겠습니까?",
   });
-  
+
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -102,11 +109,10 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }) => {
               fixMode={fixMode}
               idx={idx}
               workoutNameIdx={workoutNameIdx}
-              date={date}
               datesId={workout?.datesId}
             />
             <div style={{ marginTop: "20px" }}>
-              {el?.workouts?.map((_, setIdx) => {
+              {el?.workouts?.map((_, setIdx: number) => {
                 return (
                   <WorkoutSet
                     key={_.id}

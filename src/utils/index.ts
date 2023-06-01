@@ -19,7 +19,7 @@ export const checkByteLength = (
   param: string,
   min: number,
   max: number
-): number => {
+): 2000 | 2102 | 2101 => {
   if (getByte(param) >= min && getByte(param) <= max) {
     return SUCEED_STATUS_CODE;
   } else if (getByte(param) > max) {
@@ -32,7 +32,7 @@ export const checkByteLength = (
 // -- 특수 문자 관련 처리 로직 --
 
 const SPECIAL_CHARACTERS_REG_EXP_EXCEPT = /^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/;
-export const checkSpecialCharacters = (param: string): number => {
+export const checkSpecialCharacters = (param: string): 2000 | 2103 => {
   if (SPECIAL_CHARACTERS_REG_EXP_EXCEPT.test(param)) {
     return SUCEED_STATUS_CODE;
   } else {
@@ -42,7 +42,7 @@ export const checkSpecialCharacters = (param: string): number => {
 
 // -- 공백 관련 처리 로직 --
 
-export const checkNull = (param: string): number => {
+export const checkNull = (param: string): 2000 | 2105 => {
   if (param.indexOf("　") === -1 && param.indexOf(" ") === -1) {
     return SUCEED_STATUS_CODE;
   } else {
@@ -111,7 +111,9 @@ export const NICKNAME_VALIDATION_MESSAGE = {
   // 욕설 필터링은 추후 작업(advanced)
 };
 
-export const validateUserNickname = (nickname: string): number => {
+export const validateUserNickname = (
+  nickname: string
+): 2000 | 2101 | 2102 | 2103 | 2105 => {
   const lengthValidationCode = checkByteLength(nickname, 2, 30);
   const specialCharacterValidationCode = checkSpecialCharacters(nickname);
   const nullValidationCode = checkNull(nickname);
@@ -132,9 +134,20 @@ export const validateSignupForm = (
   pwd: string,
   nickname: string
 ): string => {
-  const idStatusCode = validateUserId(id);
-  const pwdStatusCode = validateUserPwd(pwd);
-  const nicknameStatusCode = validateUserNickname(nickname);
+  const idStatusCode = validateUserId(id) as
+    | 2000
+    | 2101
+    | 2102
+    | 2103
+    | 2104
+    | 2105;
+  const pwdStatusCode = validateUserPwd(pwd) as 2000 | 2101 | 2105;
+  const nicknameStatusCode = validateUserNickname(nickname) as
+    | 2000
+    | 2101
+    | 2102
+    | 2103
+    | 2105;
 
   if (idStatusCode !== SUCEED_STATUS_CODE) {
     return ID_VALIDATION_MESSAGE[idStatusCode];

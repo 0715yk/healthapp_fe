@@ -1,12 +1,21 @@
 import styles from "./WorkoutName.module.css";
-import React, { useEffect, useState, useCallback } from "react";
+import { KeyboardEvent, useEffect, useState, useCallback } from "react";
 import _ from "lodash";
 import Modal from "../Modal/Modal";
 import { customAxios } from "src/utils/axios";
 import { loadingState, recordWorkoutState } from "src/states";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import { WorkoutNameType } from "src/states/types";
 
-const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
+interface Props {
+  el: WorkoutNameType;
+  fixMode: boolean;
+  idx: number;
+  workoutNameIdx: number;
+  datesId: number;
+}
+
+const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, datesId }: Props) => {
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const [recordWorkout, setRecordWorkout] = useRecoilState(recordWorkoutState);
   const [workoutUpdateOn, setWorkoutUpdateOn] = useState(false);
@@ -138,7 +147,7 @@ const WorkoutName = ({ el, fixMode, idx, workoutNameIdx, date, datesId }) => {
     setAlertOn((prev) => ({ ...prev, on: false }));
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") updateWorkoutName();
   };
 

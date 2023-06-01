@@ -3,9 +3,11 @@ import styles from "./LatestWorkout.module.css";
 import { customAxios } from "src/utils/axios";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "src/states";
+import { WorkoutNameType } from "src/states/types";
 
 const LatestWorkout = () => {
-  const [workouts, setWorkouts] = useState([]);
+  const divRef = useRef<HTMLDivElement | null>(null);
+  const [workouts, setWorkouts] = useState<WorkoutNameType[]>([]);
   const [date, setDate] = useState("");
 
   const setLoadingSpinner = useSetRecoilState(loadingState);
@@ -31,13 +33,14 @@ const LatestWorkout = () => {
   };
 
   useEffect(() => {
-    void getLatest();
-    const rect = divRef.current.getBoundingClientRect();
-    setRectHeight(rect.y);
+    if (divRef?.current) {
+      void getLatest();
+      const rect = divRef.current.getBoundingClientRect();
+      setRectHeight(rect.y);
+    }
   }, []);
 
   const [rectHeight, setRectHeight] = useState(0);
-  const divRef = useRef(null);
 
   return (
     <div className={styles.latestWorkout}>
@@ -63,7 +66,7 @@ const LatestWorkout = () => {
                         <li
                           className={styles.record}
                           key={el.set}
-                          style={{ color: el.bestSet ? "yellow" : null }}
+                          style={el.bestSet ? { color: "yellow" } : {}}
                         >{`set ${key + 1} : ${
                           el.kg === null
                             ? 0

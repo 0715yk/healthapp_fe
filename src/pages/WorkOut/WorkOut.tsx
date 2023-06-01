@@ -1,4 +1,11 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  KeyboardEvent,
+  ChangeEvent,
+} from "react";
 import styles from "./WorkOut.module.css";
 import TimeLapse from "../../components/TimeLapse/TimeLapse";
 import WorkOutList from "../../components/WorkOutList/WorkOutList";
@@ -7,14 +14,14 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { nowWorkingState, workoutState } from "../../states";
 import Modal from "../../components/Modal/Modal";
 
-const WorkOut = ({ user }) => {
+const WorkOut = () => {
   const setNowWorking = useSetRecoilState(nowWorkingState);
   const [btnOption, setBtnOption] = useState(false);
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
   const [workout, setWorkout] = useState("");
-  const selectRef = useRef(null);
-  const inputRef = useRef(null);
+  const selectRef = useRef<HTMLSelectElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const workoutNames = [
     "pull up",
@@ -39,62 +46,73 @@ const WorkOut = ({ user }) => {
     "front Raise",
   ];
 
-  const getNormalInput = (e) => {
-    setWorkout(e.target.value);
-    selectRef.current.value = null;
-    if (e.keyCode === 13) {
+  const getNormalInput = (e: ChangeEvent<HTMLInputElement>) => {
+    if (selectRef?.current) {
+      const target = e.target as HTMLInputElement;
+      setWorkout(target.value);
+      selectRef.current.value = "";
+    }
+  };
+
+  const onKeyDownEvent = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
       registerWorkout();
     }
   };
 
-  const getSelectInput = (e) => {
-    const workout = e.target.value;
-    setWorkout(workout);
-    inputRef.current.value = null;
+  const getSelectInput = (e: ChangeEvent<HTMLSelectElement>) => {
+    if (inputRef?.current) {
+      const target = e.target as HTMLSelectElement;
+      const workout = target.value;
+      setWorkout(workout);
+      inputRef.current.value = "";
+    }
   };
 
   const registerWorkout = () => {
-    const copyArr = workouts.slice();
-    const flag = copyArr.find((el) => {
-      return el[0].name === workout;
-    });
-    if (workout.replace(/ /g, "") === "") {
-      setModalOn((prev) => ({
-        on: !prev.on,
-        message: "운동 종류를 선택해주세요",
-      }));
+    if (inputRef?.current && selectRef?.current) {
+      const copyArr = workouts.slice();
+      const flag = copyArr.find((el) => {
+        return el[0].name === workout;
+      });
+      if (workout.replace(/ /g, "") === "") {
+        setModalOn((prev) => ({
+          on: !prev.on,
+          message: "운동 종류를 선택해주세요",
+        }));
 
-      return;
-    } else if (flag) {
-      setModalOn((prev) => ({
-        on: !prev.on,
-        message: "이미 선택한 운동입니다.",
-      }));
-      return;
-    } else if (workout === "choose basic workout") {
-      setModalOn((prev) => ({
-        on: !prev.on,
-        message: "운동 종류를 선택해주세요",
-      }));
-      return;
+        return;
+      } else if (flag) {
+        setModalOn((prev) => ({
+          on: !prev.on,
+          message: "이미 선택한 운동입니다.",
+        }));
+        return;
+      } else if (workout === "choose basic workout") {
+        setModalOn((prev) => ({
+          on: !prev.on,
+          message: "운동 종류를 선택해주세요",
+        }));
+        return;
+      }
+
+      copyArr.push([
+        {
+          name: workout,
+          set: 1,
+          kg: "",
+          reps: "",
+          bestSet: false,
+          done: false,
+        },
+      ]);
+
+      setWorkouts(copyArr);
+
+      setWorkout("");
+      inputRef.current.value = "";
+      selectRef.current.value = "choose basic workout";
     }
-
-    copyArr.push([
-      {
-        name: workout,
-        set: 1,
-        kg: null,
-        reps: null,
-        bestSet: false,
-        done: false,
-      },
-    ]);
-
-    setWorkouts(copyArr);
-
-    setWorkout("");
-    inputRef.current.value = null;
-    selectRef.current.value = "choose basic workout";
   };
 
   const cancelBtn = () => {
@@ -118,12 +136,14 @@ const WorkOut = ({ user }) => {
     setModalOn({ on: false, message: "" });
   };
 
-  const [offsetHeight, setOffsetHeight] = useState(0);
-  const articleRef = useRef(null);
+  const [offsetHeight, setOffsetHeight] = useState<number>(0);
+  const articleRef = useRef<null | HTMLElement>(null);
 
   useEffect(() => {
-    const offsetHeightValue = articleRef.current.offsetHeight;
-    setOffsetHeight(offsetHeightValue);
+    if (articleRef?.current) {
+      const offsetHeightValue = articleRef.current.offsetHeight;
+      setOffsetHeight(offsetHeightValue);
+    }
   }, []);
 
   return (
@@ -141,7 +161,7 @@ const WorkOut = ({ user }) => {
             <div className={styles.inputArea}>
               <input
                 placeholder="direct input"
-                onKeyDown={getNormalInput}
+                onKeyDown={onKeyDownEvent}
                 ref={inputRef}
                 className={styles.directInput}
                 onChange={getNormalInput}

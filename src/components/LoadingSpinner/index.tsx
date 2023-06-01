@@ -14,7 +14,7 @@ const LoadingSpinner = () => {
   );
 };
 
-const rootDiv = document.getElementById("root");
+const rootDiv = document.getElementById("root") as HTMLElement;
 createPortal(<LoadingSpinner />, rootDiv);
 
 export default LoadingSpinner;

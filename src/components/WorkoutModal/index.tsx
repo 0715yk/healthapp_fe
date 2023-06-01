@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./WorkoutModal.module.css";
-import WorkoutData from "../../components/WorkoutData";
+import WorkoutData from "../WorkoutData";
 import _ from "lodash";
 import { useRecoilState } from "recoil";
 import { recordWorkoutState } from "../../states";
@@ -16,7 +16,7 @@ const WorkoutModal = () => {
     navigate("/main");
   };
 
-  const setFixModeFunc = (e) => {
+  const setFixModeFunc = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setFixMode((prev) => !prev);
   };

@@ -1,23 +1,22 @@
-import React, { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, KeyboardEvent } from "react";
 import styles from "./PureWorkOut.module.css";
 import Row from "../Row/Row";
 import { useRecoilState } from "recoil";
 import { workoutState } from "../../states";
 import Modal from "../Modal/Modal";
-import { checkByteLength } from "src/utils";
+import { WorkoutRecord } from "../../states/types";
 
-const PureWorkOut = ({
-  workout,
-  idx,
-  checkList,
-  setCheckList,
-  workoutList,
-}) => {
+interface Props {
+  idx: number;
+  workoutList: WorkoutRecord[];
+}
+
+const PureWorkOut = ({ idx, workoutList }: Props) => {
   const [btnOption, setBtnOption] = useState(false);
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const [fixMode, setFixMode] = useState(false);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
-  const titleRef = useRef();
+  const titleRef = useRef<HTMLInputElement | null>(null);
 
   const addSet = () => {
     const copyArr = workouts.slice();
@@ -36,8 +35,8 @@ const PureWorkOut = ({
     copyWorkoutList.push({
       name: copyWorkoutList[copyWorkoutList.length - 1].name,
       set: copyWorkoutList[copyWorkoutList.length - 1].set + 1,
-      kg: null,
-      reps: null,
+      kg: "",
+      reps: "",
       bestSet: false,
       done: false,
     });
@@ -47,11 +46,14 @@ const PureWorkOut = ({
 
   const fixTitle = () => {
     const copyWorkoutList = workoutList.slice();
-
+    console.log("here");
     if (fixMode) {
       const copyArr = workouts.slice();
 
-      if (titleRef.current.value.replace(/ /g, "") === "") {
+      if (
+        titleRef?.current &&
+        titleRef.current.value.replace(/ /g, "") === ""
+      ) {
         setModalOn((prev) => ({
           on: !prev.on,
           message: "최소한 한글자 이상을 입력해주세요",
@@ -63,18 +65,24 @@ const PureWorkOut = ({
 
       copyArr[idx] = [
         ...copyWorkoutList.map((el) => {
-          const copyEl = Object.assign({}, el);
-          copyEl.name = titleRef.current.value;
-          return copyEl;
+          if (titleRef?.current) {
+            const copyEl = Object.assign({}, el);
+            copyEl.name = titleRef.current.value;
+            return copyEl;
+          } else {
+            return el;
+          }
         }),
       ];
       setWorkouts(copyArr);
     } else {
       setFixMode(true);
       setTimeout(() => {
-        titleRef.current.value =
-          copyWorkoutList[copyWorkoutList.length - 1].name;
-        titleRef.current.focus();
+        if (titleRef?.current) {
+          titleRef.current.value =
+            copyWorkoutList[copyWorkoutList.length - 1].name;
+          titleRef.current.focus();
+        }
       });
     }
   };
@@ -84,7 +92,7 @@ const PureWorkOut = ({
     setModalOn({ on: true, message: "정말 삭제하시겠습니까?" });
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") fixTitle();
   };
 
@@ -132,15 +140,7 @@ const PureWorkOut = ({
       <div className={styles.rows} key={idx}>
         {workoutList.map((el, keyIdx) => {
           return (
-            <Row
-              key={keyIdx}
-              workoutList={workoutList}
-              idx={idx}
-              el={el}
-              workout={workout}
-              checkList={checkList}
-              setCheckList={setCheckList}
-            />
+            <Row key={keyIdx} workoutList={workoutList} idx={idx} el={el} />
           );
         })}
         <button id={styles.addBtn} onClick={addSet}>

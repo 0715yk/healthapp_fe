@@ -11,11 +11,13 @@ export interface User {
 }
 
 export interface Time {
-  startTime: string;
-  endTime: string;
+  startTime: moment.Moment;
+  endTime: moment.Moment;
 }
 
-export interface Duration extends Time {
+export interface Duration {
+  startTime: string;
+  endTime: string;
   hour: number;
   min: number;
   sec: number;
@@ -28,8 +30,17 @@ export interface Workout {
   kg: string;
   reps: string;
   bestSet: boolean;
+  name: string;
 }
 
+export interface WorkoutRecord {
+  set: number;
+  kg: string;
+  reps: string;
+  bestSet?: boolean;
+  name: string;
+  done: boolean;
+}
 export interface RecordWorkout {
   datesId: number;
   id: number;
@@ -44,12 +55,22 @@ export interface DailyRecordWorkout {
   name: string;
   reps: string;
   set: number;
+  datesId: number;
+  id: number;
+  workoutNames: WorkoutNameType[];
+}
+
+export interface WorkoutNameType {
+  workoutName: string;
+  workoutNumId: number;
+  id: number;
+  workouts: Workout[];
 }
 
 export type RecordWorkouts = DailyRecordWorkout[];
 
-export type Record = Workout[][];
+export type Record = WorkoutRecord[][];
 
-export type BestSet = Workout[];
+export type BestSet = WorkoutRecord[];
 
 export type WorkoutCount = number;
