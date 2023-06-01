@@ -46,7 +46,7 @@ const PureWorkOut = ({ idx, workoutList }: Props) => {
 
   const fixTitle = () => {
     const copyWorkoutList = workoutList.slice();
-    console.log("here");
+
     if (fixMode) {
       const copyArr = workouts.slice();
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./WorkoutMain.module.css";
 import moment from "moment";
 import {
@@ -63,10 +63,6 @@ const WorkoutMain = () => {
     }
   };
 
-  const DatepickerInput = ({ ...props }) => (
-    <input type="text" {...props} readOnly />
-  );
-
   const closeModal = () => {
     setModalOn({ on: false, message: "" });
   };
@@ -102,7 +98,6 @@ const WorkoutMain = () => {
               e.preventDefault()
             }
             withPortal
-            customInput={<DatepickerInput />}
           />
         </article>
         <article>
