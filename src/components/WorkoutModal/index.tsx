@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./WorkoutModal.module.css";
 import WorkoutData from "../WorkoutData";
 import _ from "lodash";
@@ -13,7 +13,7 @@ const WorkoutModal = () => {
 
   const backBtn = () => {
     setRecordWorkout([]);
-    navigate("/main");
+    navigate("/main", { state: "ON" });
   };
 
   const setFixModeFunc = (e: React.MouseEvent<HTMLButtonElement>) => {

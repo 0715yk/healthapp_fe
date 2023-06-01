@@ -74,3 +74,5 @@ export type Record = WorkoutRecord[][];
 export type BestSet = WorkoutRecord[];
 
 export type WorkoutCount = number;
+
+export type GetLatestFlag = "ON" | "OFF";

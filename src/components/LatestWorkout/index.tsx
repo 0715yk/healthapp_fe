@@ -1,16 +1,21 @@
 import { useEffect, useState, useRef } from "react";
 import styles from "./LatestWorkout.module.css";
 import { customAxios } from "src/utils/axios";
-import { useSetRecoilState } from "recoil";
-import { loadingState } from "src/states";
-import { WorkoutNameType } from "src/states/types";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  getLatestFlagState,
+  latestWorkoutState,
+  loadingState,
+} from "src/states";
+import { useLocation } from "react-router-dom";
 
 const LatestWorkout = () => {
+  const { state } = useLocation();
   const divRef = useRef<HTMLDivElement | null>(null);
-  const [workouts, setWorkouts] = useState<WorkoutNameType[]>([]);
   const [date, setDate] = useState("");
-
+  const [workouts, setWorkouts] = useRecoilState(latestWorkoutState);
   const setLoadingSpinner = useSetRecoilState(loadingState);
+  const setLatestFlag = useSetRecoilState(getLatestFlagState);
   const getLatest = async () => {
     setLoadingSpinner({ isLoading: true });
     try {
@@ -33,7 +38,8 @@ const LatestWorkout = () => {
   };
 
   useEffect(() => {
-    if (divRef?.current) {
+    if (divRef?.current && (state === "ON" || state === "login")) {
+      setLatestFlag("OFF");
       void getLatest();
       const rect = divRef.current.getBoundingClientRect();
       setRectHeight(rect.y);
@@ -56,7 +62,7 @@ const LatestWorkout = () => {
         {workouts.length !== 0
           ? workouts.map((workout) => {
               return (
-                <section className={styles.workoutPart}>
+                <section key={workout.id} className={styles.workoutPart}>
                   <h3 style={{ color: "white" }} className={styles.workoutName}>
                     {workout?.workoutName}
                   </h3>

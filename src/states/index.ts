@@ -10,8 +10,13 @@ import {
   Record,
   BestSet,
   WorkoutCount,
+  GetLatestFlag,
+  WorkoutNameType,
 } from "./types";
 import moment from "moment";
+import { recoilPersist } from "recoil-persist";
+
+const { persistAtom } = recoilPersist();
 
 export const nowWorkingState = atom<NowWorking>({
   key: "nowWorkingState",
@@ -126,4 +131,15 @@ export const workoutCntState = selector<WorkoutCount>({
     const workouts = get(workoutState);
     return workouts.length;
   },
+});
+
+export const getLatestFlagState = atom<GetLatestFlag>({
+  key: "getLatestFlagState",
+  default: "OFF",
+});
+
+export const latestWorkoutState = atom<WorkoutNameType[]>({
+  key: "latestWorkoutState",
+  default: [],
+  effects_UNSTABLE: [persistAtom],
 });

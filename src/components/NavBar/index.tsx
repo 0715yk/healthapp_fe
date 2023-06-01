@@ -1,8 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import { useCallback, useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { nowWorkingState, workoutState } from "src/states";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { getLatestFlagState, nowWorkingState, workoutState } from "src/states";
 import Modal from "../Modal/Modal";
 
 let headingUrl = "";
@@ -26,6 +26,7 @@ const NavBar = ({ children }: Props) => {
   const [nowUrl, setNowUrl] = useState("");
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
   const setWorkouts = useSetRecoilState(workoutState);
+  const getLatestFlag = useRecoilValue(getLatestFlagState);
 
   useEffect(() => {
     const pathName = location.pathname;
@@ -55,10 +56,14 @@ const NavBar = ({ children }: Props) => {
             "탭을 이탈하면 해당 기록으로 다시 돌아올 수 없습니다. 나가시겠습니까?",
         });
       } else {
-        navigate(url);
+        if (url === "/main") {
+          navigate(url, { state: getLatestFlag });
+        } else {
+          navigate(url);
+        }
       }
     },
-    [navigate, nowUrl, nowWorking.nowWorking]
+    [navigate, nowUrl, nowWorking.nowWorking, getLatestFlag]
   );
 
   const closeModal = () => {
@@ -74,9 +79,6 @@ const NavBar = ({ children }: Props) => {
     setModalOn({ on: false, message: "" });
   };
 
-  useEffect(() => {
-    console.log(location.pathname);
-  }, [location.pathname]);
   return (
     <>
       {children}

@@ -23,9 +23,6 @@ const WorkoutData = ({ fixMode, workout, idx, setFixModeFunc }: Props) => {
   });
 
   const setLoadingSpinner = useSetRecoilState(loadingState);
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const date = urlParams.get("date");
 
   // workout 제거 함수
   const deleteWorkout = useCallback(async () => {

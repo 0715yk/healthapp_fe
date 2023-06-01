@@ -15,7 +15,6 @@ const Login = React.forwardRef(({}, ref: ForwardedRef<HTMLDivElement>) => {
   const idRef = useRef<HTMLInputElement | null>(null);
   const pwdRef = useRef<HTMLInputElement | null>(null);
   const [modalOn, setModalOn] = useState({ on: false, message: "" });
-
   const setUserState = useSetRecoilState(userState);
 
   const signupRef = useRef<HTMLDivElement | null>(null);

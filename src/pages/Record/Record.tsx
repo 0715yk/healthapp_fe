@@ -19,7 +19,7 @@ const Record = () => {
   const setNowWorking = useSetRecoilState(nowWorkingState);
   const workoutCnt = useRecoilValue(workoutCntState);
   const navigate = useNavigate();
-  console.log(workoutCnt);
+
   useEffect(() => {
     window.scrollTo(0, 0);
 
@@ -31,7 +31,7 @@ const Record = () => {
   const completeWorkout = async () => {
     setNowWorking({ nowWorking: false });
     setWorkouts([]);
-    navigate("/main");
+    navigate("/main", { state: "ON" });
   };
 
   return (

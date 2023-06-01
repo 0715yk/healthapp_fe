@@ -5,7 +5,12 @@ import PureWorkOut from "../PureWorkOut/PureWorkOut";
 import moment from "moment";
 import Modal from "../Modal/Modal";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { workoutState, timeState, loadingState } from "../../states";
+import {
+  workoutState,
+  timeState,
+  loadingState,
+  getLatestFlagState,
+} from "../../states";
 import { customAxios } from "src/utils/axios";
 import _ from "lodash";
 
@@ -14,6 +19,7 @@ interface Props {
 }
 
 const WorkOutList = ({ offsetHeight }: Props) => {
+  const setLatestFlag = useSetRecoilState(getLatestFlagState);
   const setLoadingSpinner = useSetRecoilState(loadingState);
   const [workouts, setWorkouts] = useRecoilState(workoutState);
   const [time, setTime] = useRecoilState(timeState);
@@ -87,6 +93,7 @@ const WorkOutList = ({ offsetHeight }: Props) => {
       setLoadingSpinner({ isLoading: false });
       setModalOn({ on: false, message: "" });
       setWorkouts(copyArr);
+      setLatestFlag("ON");
       navigate("/main/record");
     } catch {
       setLoadingSpinner({ isLoading: false });
@@ -95,7 +102,15 @@ const WorkOutList = ({ offsetHeight }: Props) => {
         message: "서버 에러 입니다. 잠시후 다시 시도해주세요.",
       });
     }
-  }, [navigate, setLoadingSpinner, time, setWorkouts, workouts, setTime]);
+  }, [
+    navigate,
+    setLoadingSpinner,
+    time,
+    setWorkouts,
+    workouts,
+    setTime,
+    setLatestFlag,
+  ]);
 
   const checkFinishWorkout = () => {
     setBtnOption(true);
